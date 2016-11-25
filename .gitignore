@@ -1,5 +1,2 @@
 #Ignored .idea Files:
 .idea/
-
-#Node Module:
-node_modules/

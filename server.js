@@ -13,6 +13,6 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(express.static(__dirname + '/public'));
 
-
+var mySQL=require("./public/server/app")(app);
 
 app.listen(port, ipaddress);
