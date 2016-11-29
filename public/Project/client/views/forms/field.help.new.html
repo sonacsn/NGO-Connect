@@ -1,0 +1,62 @@
+
+<!--HELP-->
+
+
+
+<label for="text-field">{{field.label}}</label>
+<!--TEXT-->
+<td class="form-group" ng-if="field.fieldType=='TEXT'">
+    <input name="name" placeholder="{{field.placeholder}}" type="text" value="">
+</td>
+
+<!--TEXTAREA-->
+<td class="form-group" ng-if="field.fieldType=='TEXTAREA'">
+    <textarea cols="40" name="name" placeholder="{{field.placeholder}}" rows="8"></textarea>
+</td>
+
+<!--DATE-->
+<td class="form-group" ng-if="field.fieldType=='DATE'">
+    <input name="name" placeholder="{{field.placeholder}}" type="date" value="">
+</td>
+
+<!--OPTIONS-->
+<td class="form-group" ng-if="field.fieldType=='SELECT'">
+    <select class="form-control" name="sel">
+        <option ng-repeat="option in field.options" value="{{option.value}}">
+            {{option.label}}
+        </option>
+    </select>
+</td>
+
+<!--CHECKBOXES-->
+<td class="form-group" ng-if="field.fieldType=='CHECKBOX'">
+    <div class="checkbox" ng-repeat="option in field.options">
+        <label><input type="checkbox" value="{{option.value}}">{{option.label}}</label>
+    </div>
+</td>
+<!--RADIO-->
+<td class="form-group" ng-if="field.fieldType=='RADIO'">
+    <div class="radio" ng-repeat="option in field.options">
+        <label><input name="optradio" type="radio" value="{{option.value}}">{{option.label}}</label>
+    </div>
+</td>
+<!--EMAIL-->
+<td class="form-group" ng-if="field.fieldType=='EMAIL'">
+    <input name="email" placeholder="{{field.placeholder}}" type="email" value="">
+</td>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

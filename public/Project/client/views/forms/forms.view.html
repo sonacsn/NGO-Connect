@@ -1,0 +1,43 @@
+
+
+<div class="col-sm-9 col-sm-offset-3 col-md-8 col-md-offset-3 col-lg-7 col-lg-offset-3">
+    <h1 class="page-header">Forms</h1>
+    <br>
+    <h2 ng-hide="user">Please <a href="#/login">Login</a>/<a href="#/register">Register</a> to view Forms</h2>
+    <div ng-show="user">
+        <ul class="nav nav-tabs">
+            <li role="presentation" ng-class="{active: $location.path() == '/forms'}"><a href="#/forms">Forms</a></li>
+            <li role="presentation" ng-class="{active: $location.path() == '/form/:formId/fields'}">
+            <a href="">Fields</a></li>
+        </ul>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th><span class="caret"></span> Form Name</th>
+                    <th><span class="caret"></span> Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><input type="text" placeholder="Form Name" ng-model="form.title"></td>
+                    <td class="text-nowrap"><a class="btn btn-primary btn-md" ng-click="addForm(form.title)" role="button">
+                        <span class="glyphicon glyphicon-plus"></span></a>
+                        <a class="btn btn-success btn-md" ng-click="updateForm(form)" role="button">
+                            <span class="glyphicon glyphicon-ok"></span></a>
+                    </td>
+
+                </tr>
+                <tr ng-repeat="form in forms" ng-class="{'selected':$index == selectedRow}">
+                    <td><a href="#/form/{{form._id}}/fields">{{form.title}}</a></td>
+                    <td class="text-nowrap">
+                        <a class="btn btn-info btn-md" ng-click="editForm($index)" role="button"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a class="btn btn-danger btn-md"ng-click="deleteForm(form)" role="button"><span class="glyphicon glyphicon-remove"></span></a>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

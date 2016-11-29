@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Collapse</title>
+
+
+
+
+    <script src="https://code.angularjs.org/1.3.16/angular.min.js"></script>
+    <script src="https://code.angularjs.org/1.3.16/angular-route.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+  <!--  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    &lt;!&ndash; Custom styles for this template &ndash;&gt;
+    <link href=" http://getbootstrap.com/examples/dashboard/dashboard.css" rel="stylesheet">-->
+
+</head>
+<body>
+
+
+
+<table class="table table-hover" style="border-collapse:collapse;">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Credit</th>
+        <th>Debit</th>
+        <th>Balance</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr data-toggle="collapse" data-target="#demo1" class="accordion-toggle">
+        <td>1</td>
+        <td>05 May 2013</td>
+        <td>Credit Account</td>
+        <td class="text-success">$150.00</td>
+        <td class="text-error"></td>
+        <td class="text-success">$150.00</td>
+    </tr>
+    <tr >
+        <td colspan="6" class="hiddenRow">
+            <div class="accordian-body collapse" id="demo1">
+            Demo1
+        </div>
+        </td>
+    </tr>
+    <tr data-toggle="collapse" data-target="#demo2" class="accordion-toggle">
+        <td>2</td>
+        <td>05 May 2013</td>
+        <td>Credit Account</td>
+        <td class="text-success">$11.00</td>
+        <td class="text-error"></td>
+        <td class="text-success">$161.00</td>
+    </tr>
+    <tr>
+        <td colspan="6" class="hiddenRow">
+            <div id="demo2" class="accordian-body collapse">
+
+        </div></td>
+    </tr>
+
+
+    <tr data-toggle="collapse" data-target="#demo3" class="accordion-toggle">
+        <td>3</td>
+        <td>05 May 2013</td>
+        <td>Credit Account</td>
+        <td class="text-success">$500.00</td>
+        <td class="text-error"></td>
+        <td class="text-success">$661.00</td>
+    </tr>
+    <tr>
+        <td colspan="6"  class="hiddenRow"><div id="demo3" class="accordian-body collapse">Demo3</div></td>
+    </tr>
+    </tbody>
+</table>
+
+
+<!--
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Username</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th scope="row">1</th>
+        <td>Mark</td>
+        <td>Otto</td>
+        <td>@mdo</td>
+    </tr>
+    <tr>
+        <th scope="row">2</th>
+        <td>Jacob</td>
+        <td>Thornton</td>
+        <td>@fat</td>
+    </tr>
+    <tr>
+        <th scope="row">3</th>
+        <td colspan="2">Larry the Bird</td>
+        <td>@twitter</td>
+    </tr>
+    </tbody>
+</table>
+
+
+-->
+
+<!--
+
+
+<div id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="card">
+        <div class="card-header" role="tab" id="headingOne">
+            <h5 class="mb-0">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Collapsible Group Item #1
+                </a>
+            </h5>
+        </div>
+
+        <div id="collapseOne" class="collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="card-block">
+                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header" role="tab" id="headingTwo">
+            <h5 class="mb-0">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Collapsible Group Item #2
+                </a>
+            </h5>
+        </div>
+        <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="card-block">
+                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header" role="tab" id="headingThree">
+            <h5 class="mb-0">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Collapsible Group Item #3
+                </a>
+            </h5>
+        </div>
+        <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree">
+            <div class="card-block">
+                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+            </div>
+        </div>
+    </div>
+</div>
+
+-->
+
+
+</body>
+</html>

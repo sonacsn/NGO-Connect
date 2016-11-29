@@ -1,0 +1,57 @@
+
+        <div class="col-sm-offset-3 main">
+            <br>
+            <br>
+            <br>
+            <div class="well well-lg col-md-9">
+                <div class="header col-xs-offset-5 ">
+                    <h3>Login</h3>
+                </div>
+                <br>
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <label for="user1" class="col-md-3 col-sm-4 control-label">Name</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="user1" ng-model="user.username" placeholder="Username">
+                        </div>
+                    </div>
+
+                   <!-- <div class="form-group">
+                        <label for="password1" class="col-md-3 col-sm-4 control-label">Password</label>
+                        <div class="col-sm-6">
+                            <input type="password" class="form-control" id="password1" ng-model="user.password" placeholder="Password">
+                        </div>
+                    </div>-->
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-10">
+
+                           <!-- <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"> Remember me
+                                </label>
+                            </div>-->
+
+
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="inlineRadio1" ng-model="user.type"
+                                       value="NGO"> NGO
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="inlineRadio2"  ng-model="user.type"
+                                       value="Volunteer"> Volunteer
+                            </label>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-10">
+                            <a class="btn btn-default" role="button" ng-click="login(user)">   Login</a>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>

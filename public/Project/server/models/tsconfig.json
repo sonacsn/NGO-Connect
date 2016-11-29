@@ -1,0 +1,71 @@
+{
+  "Employee" :
+  {
+    "Name" : "Henri Poincare",
+    "Position" : "Professor",
+    "Address" : "100 St. Botolph Street, Boston, MA",
+    "Email" : "h.poincare@neu.edu",
+    "Dependent" : [
+      {
+        "relatedBy" : "Spouse",
+        "name" : "Louise Poulin d'Andesi"
+      },
+      {
+        "relatedBy" : "Child",
+        "name" : "Jeanne Poincare"
+      },
+      {
+        "relatedBy" : "Child",
+        "name" : "Yvonne Poincare"
+      },
+      {
+        "relatedBy" : "Child",
+        "name" : "Henriette Poincare"
+      },
+      {
+        "relatedBy" : "Child",
+        "name" : "Leon Poincare"
+      }
+    ],
+    "Benefit" :
+    {
+      "type" : "Medical",
+      "Plan" : {
+        "PlanName" : "Fantastic Plan",
+        "PlanDescription" : "Lots of medical benefits",
+        "Cost" : [
+          {
+            "period" : "month",
+            "EmployeeCost" : "100.25",
+            "EmployerSubsidy" : "50.10"
+          },
+          {
+            "period" : "week",
+            "EmployeeCost" : "24.50",
+            "EmployerSubsidy" : "11.56"
+          }
+        ]
+      }
+    },
+    "Benefit" :
+    {
+      "type" : "Dental",
+      "Plan" : {
+        "PlanName" : "Sparkling Plan",
+        "PlanDescription" : "Lots of dental benefits",
+        "Cost" : [
+          {
+            "period" : "month",
+            "EmployeeCost" : "5.50",
+            "EmployerSubsidy" : "2.10"
+          },
+          {
+            "period" : "week",
+            "EmployeeCost" : "1.51",
+            "EmployerSubsidy" : "0.50"
+          }
+        ]
+      }
+    }
+  }
+}
