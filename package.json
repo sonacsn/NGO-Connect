@@ -20,16 +20,22 @@
   },
   "homepage": "https://github.com/Verma92/DBMS#readme",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "better-js-class": "*",
     "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
     "cps": "*",
     "express": "^4.14.0",
     "express-session": "^1.14.2",
     "express.js": "^1.0.0",
+    "mongoose": "^4.7.0",
     "mssql": "^3.3.0",
     "multer": "^1.2.0",
     "mysql": "^2.12.0",
     "node-mysql": "^0.4.2",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "q": "^1.4.1",
     "underscore": "*"
   }
 }
