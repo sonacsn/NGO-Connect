@@ -76,7 +76,14 @@
             if (user !== '0')
             {
                 $rootScope.user = user;
-                console.log(user.firstName)
+
+                console.log("found user in path")
+
+                if(user.email!=null)
+                    $rootScope.type="Volunteer"
+                else
+                    $rootScope.type="NGO"
+                console.log(user)
                 deferred.resolve();
             }
             // User is Not Authenticated

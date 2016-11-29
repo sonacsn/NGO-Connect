@@ -17,14 +17,17 @@
             </ul>
             <ul class="nav navbar-nav navbar-right" ng-show="user">
                 <li  ng-class="{'active': $location.url().indexOf('profile')!=-1}">
-                    <a href="#/profile"> {{user.firstName == null? user.name : user.firstName}}</a>
+                    <a href="#/profile"> {{type == 'NGO'? user.name : user.firstName}} {{user.name == null}}</a>
                 </li>
                 <li>
                 <a href="#/home" ng-click="logout()">Logout</a>
             </li>
             </ul>
         </div>
-        <div id="navbar1" class="navbar-collapse collapse">
+
+       <!-- ng-show="user.name == null"-->
+
+        <div id="navbar1" class="navbar-collapse collapse" >
             <ul class="nav navbar-nav navbar-right visible-xs">
                 <li  ng-class="{'active': $location.url().indexOf('home')!=-1}"><a href="#/home">Home </a></li>
                 <li  ng-class="{'active': $location.url().indexOf('profile')!=-1}"><a href="#/profile">Profile</a></li>

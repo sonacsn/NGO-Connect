@@ -14,12 +14,13 @@
 
                 console.log(user);
                   UserService.findUserByCredentials(user)
-                 .then(function (user) {
+                 .then(function (response) {
 
-                 if(user.length!=0)
+                 if(response.length!=0)
                  {
-                     console.log(user)
-                 $rootScope.user =user;
+                     console.log(response)
+                 $rootScope.user =response;
+                     $rootScope.type =user.type;
                  $location.path("/profile");
                  }
                  else
