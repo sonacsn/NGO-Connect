@@ -4,19 +4,34 @@ module.exports = function(app,pool) {
     var modeluser = require("./models/user.model.js")(pool);
     require("./services/user.service.server.js")(app, modeluser);
 
-/*
-  /!*  pool.query('SELECT * FROM NGO', function(err, rows, fields) {
+  /*  pool.query('SELECT * FROM NGO', function(err, rows, fields) {
         if (err) throw err;
         console.log('The solution is: ',rows);
-    });*!/
-    pool.query({
+    });*/
+  /*  pool.query({
         sql: 'SELECT * FROM `NGO` WHERE `location` = ?',
         timeout: 40000, // 40s
         values: ['New York']
     }, function (error, results, fields) {
         console.log('The solution is: ',results[0]);
+    });*/
+
+    var post  = {id: 4, firstname: 'shiva', lastname: 'singh', gender: 'Male',
+        age: '54', email: 'shiva@cool.com',occupation:'freedomfighter'};
+    var query = pool.query('INSERT INTO Person SET ?', post, function(err, result) {
+
+        console.log('The insertion is: ',result);
     });
-*/
+
+   /* pool.query({
+        sql: 'SELECT * FROM `Person` WHERE `firstName`=?',
+        timeout: 40000,
+        values: ['shiva']
+    }, function (error, results, fields) {
+
+        results[0].type='Volunteer';
+        console.log('The solution is: ',results[0]);
+    });*/
 
 };
 

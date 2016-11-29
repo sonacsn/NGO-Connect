@@ -6,6 +6,11 @@
         var vm = this;
             vm.register = adduser;
 
+
+        function init() {
+        $scope.selected=1;
+        }
+        init();
         function adduser(user) {
             console.log(user)
             if (user.username !== undefined && user.password !== undefined

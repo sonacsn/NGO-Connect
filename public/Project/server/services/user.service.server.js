@@ -161,11 +161,11 @@ module.exports = function(app, model) {
     function updateuser(req, res) {
         var user = req.body;
         var userId = req.params.id;
-       user_model
-           .Update(userId, user)
-           .then(function(newuser){
-               console.log(newuser)
-            res.json(newuser)});
+        user_model
+            .Update(userId, user)
+            .then(function(newuser){
+                console.log(newuser)
+                res.json(newuser)});
 
     }
     function GetUserById(req, res) {
