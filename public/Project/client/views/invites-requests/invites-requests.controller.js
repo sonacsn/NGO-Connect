@@ -1,21 +1,16 @@
 (function() {
     angular.module("FormBuilderApp")
-        .controller("ProjectController", ProjectController);
+        .controller("invreqController", invreqController);
 
-    function ProjectController($scope,$rootScope, $routeParams,$location,UserService,FormService) {
+    function invreqController($scope,$rootScope, $routeParams,$location,UserService,FormService) {
         var vm = this;
         function init(){
-          /* if($rootScope.user)
-           {
-            FormService.findAllFormsForUser($rootScope.user).then(function(forms)
-        {
-            $scope.forms=forms
-            console.log($scope.forms)
-        });
-           }*/
-            $scope.projects=[
+                $scope.selected=1;
+console.log("init")
+            $scope.volunteers=[
                 {id: 1,
                     name:'Mine Ban Treaty',
+                    status:'approved',
                     location:'Wyoming',
                     description:'aims at eliminating anti-personnel landmines (AP-mines) around the world',
                     duration_months:15 ,
@@ -24,14 +19,37 @@
                 ngo:1} ,
 
             {id: 1,name:'Mine Ban Treaty',
+                status:'declined',
                 location:'Wyoming',
                 description:'aims at eliminating anti-personnel landmines (AP-mines) around the world',
                 duration_months:15 ,
                 startDate:'2016-11-30 05:00:00',
                 volunteerCount:100 ,
-                ngo:1}
+                ngo:1},
+
+                {id: 1,name:'Mine Ban Treaty',
+                    status:'pending',
+                    location:'Wyoming',
+                    description:'aims at eliminating anti-personnel landmines (AP-mines) around the world',
+                    duration_months:15 ,
+                    startDate:'2016-11-30 05:00:00',
+                    volunteerCount:100 ,
+                    ngo:1}
+
         ]
+            $scope.projects= $scope.volunteers;
+
+            /* if($rootScope.user)
+             {
+             FormService.findAllFormsForUser($rootScope.user).then(function(forms)
+             {
+             $scope.forms=forms
+             console.log($scope.forms)
+             });
+             }*/
         }
+
+
 
         init();
 

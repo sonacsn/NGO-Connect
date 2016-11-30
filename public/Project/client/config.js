@@ -39,7 +39,15 @@
                     loggedin: checkLoggedin
                 }
             })
-
+            .when("/invites-requests",{
+                templateUrl:"views/invites-requests/invites-requests.view.html",
+                controller:"invreqController",
+                controllerAs:"vm",
+                resolve: {
+                    loggedin: checkLoggedin
+                }
+            })
+      //  invites-requests
             .when("/admin",{
                 templateUrl:"views/admin/admin.view.html",
                 controller:"AdminController",
