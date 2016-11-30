@@ -31,6 +31,14 @@
                 controller:"LoginController",
                 controllerAs:"vm"
             })
+            .when("/projects",{
+                templateUrl:"views/projects/projects.view.html",
+                controller:"ProjectController",
+                controllerAs:"vm",
+                resolve: {
+                    loggedin: checkLoggedin
+                }
+            })
 
             .when("/admin",{
                 templateUrl:"views/admin/admin.view.html",

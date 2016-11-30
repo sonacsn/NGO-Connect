@@ -5,7 +5,7 @@
             <ul class="nav nav-sidebar" ng-show="type=='Volunteer'">
                 <li  ng-class="{'active': $location.url().indexOf('home')!=-1}"><a href="#/home">Home </a></li>
                 <li  ng-class="{'active': $location.url().indexOf('profile')!=-1}"><a href="#/profile">Volunteer Profile</a></li>
-                <li  ng-class="{'active': $location.url().indexOf('admin')!=-1}"><a href="#/admin">Admin</a></li>
+                <li  ng-class="{'active': $location.url().indexOf('projects')!=-1}"><a href="#/projects">Projects</a></li>
                 <li  ng-class="{'active': ($location.url().indexOf('forms')!=-1)||
                 ($location.url().indexOf('fields')!=-1)}"><a href="#/forms">Forms</a></li>
             </ul>
@@ -13,7 +13,7 @@
     <ul class="nav nav-sidebar" ng-hide="type=='Volunteer'">
         <li  ng-class="{'active': $location.url().indexOf('home')!=-1}"><a href="#/home">Home </a></li>
         <li  ng-class="{'active': $location.url().indexOf('profile')!=-1}"><a href="#/profile">Profile NGO</a></li>
-        <li  ng-class="{'active': $location.url().indexOf('admin')!=-1}"><a href="#/admin">Admin</a></li>
+        <li  ng-class="{'active': $location.url().indexOf('projects')!=-1}"><a href="#/projects">Projects</a></li>
         <li  ng-class="{'active': ($location.url().indexOf('forms')!=-1)||
                 ($location.url().indexOf('fields')!=-1)}"><a href="#/forms">Forms</a></li>
     </ul>

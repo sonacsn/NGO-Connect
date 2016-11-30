@@ -1,0 +1,186 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-8 col-md-offset-3 col-lg-7 col-lg-offset-3">
+    <div class="tab-pane fade in active">
+    <h1 class="page-header">Fields</h1>
+        <br>
+    <ul class="nav nav-tabs">
+        <li role="presentation" ng-class="{active: $location.path() == '/forms'}"><a href="#/forms">Forms</a></li>
+        <li role="presentation" ng-class="{active: vm.formId }">
+            <a href="">Fields</a></li>
+    </ul>
+        <div class="table-responsive table-no-border th table-no-border td">
+            <table class="table " >
+                <tbody ui-sortable ui-sortable-callback="vm.checker">
+                <tr ng-repeat="field in vm.fields" >
+                    <td>
+                        <!--TEXT-->
+                        <div class="form-group" ng-if="field.type=='TEXT'">
+                            <label for="TEXT">{{field.label}}:</label>
+                            <input id="TEXT" class="form-control input-sm"  placeholder="{{field.placeholder}}" type="text">
+                        </div>
+
+                        <!--TEXTAREA-->
+                        <div class="form-group" ng-if="field.type=='TEXTAREA'">
+                            <label for="TEXTAREA">{{field.label}}:</label>
+                            <textarea cols="40"  class="form-control input-sm" id="TEXTAREA"
+                                      placeholder="{{field.placeholder}}" rows="8"></textarea>
+                        </div>
+                        <!--DATE-->
+                        <div class="form-group" ng-if="field.type=='DATE'">
+                        <label for="DATE">{{field.label}}:</label>
+                        <input id="DATE" class="form-control input-sm"  type="date">
+                        </div>
+                        <!--EMAIL-->
+                        <div class="form-group" ng-if="field.type=='EMAIL'">
+                            <label for="EMAIL">{{field.label}}:</label>
+                            <input id="EMAIL" class="form-control input-sm"  placeholder="{{field.placeholder}}" type="email">
+                        </div>
+
+                        <!--OPTIONS-->
+                        <div class="form-group" ng-if="field.type=='OPTIONS'">
+                            <label for="OPTIONS">{{field.label}}:</label>
+                            <select class="form-control"  id="OPTIONS">
+                                <option ng-repeat="option in field.options" value="{{option.value}}" label="{{option.value}}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <!--CHECKBOXES-->
+                    <div class="form-group" ng-if="field.type=='CHECKBOXES'">
+                        <label for="CHECKBOXES">{{field.label}}:</label>
+                        <div class="checkbox" ng-repeat="option in field.options" id="CHECKBOXES">
+                            <label><input type="checkbox" value="{{option.value}}">{{option.label}}</label>
+                        </div>
+                    </div>
+
+                    <!--RADIO-->
+                    <div class="form-group" ng-if="field.type=='RADIOS'">
+                        <label for="RADIOS">{{field.label}}:</label>
+                        <div class="radio" ng-repeat="option in field.options" id="RADIOS">
+                            <label><input type="radio" value="{{option.value}}">{{option.label}}</label>
+                        </div>
+                    </div>
+
+                    </td>
+                    <td class="text-nowrap text-right">
+                        <a class="btn btn-info btn-sm" href="" role="button" >
+                            <span class="glyphicon glyphicon-align-justify handle"></span></a>
+
+                        <a class="btn btn-warning btn-sm" href="" role="button" ng-click="vm.selectfield(field)"
+                           data-toggle="modal" data-target="#update">
+                            <span class="glyphicon glyphicon-pencil"></span></a>
+                        <a class="btn btn-danger btn-sm" href="" role="button" ng-click="vm.deleteField(field._id)">
+                            <span class="glyphicon glyphicon-remove"></span></a>
+                    </td>
+
+                </tr>
+
+                </tbody>
+            </table>
+
+                <table class="table ">
+                    <tbody>
+            <tr>
+                <hr>
+
+                <td>
+                    <label for="DROPDOWN">Add New Field</label>
+                    <div class="form-group" id="DROPDOWN">
+                        <select class="form-control" ng-model="field.type">
+                            <option ng-value="TEXT" selected="selected">TEXT</option>
+                            <option ng-value="TEXTAREA">TEXTAREA</option>
+                            <option ng-value="RADIOS">RADIOS</option>
+                            <option ng-value="CHECKBOXES">CHECKBOXES</option>
+                            <option ng-value="OPTIONS">OPTIONS</option>
+                            <option ng-value="DATE">DATE</option>
+                        </select>
+                    </div>
+                </td>
+
+                <td class="text-nowrap text-right">
+                    <a class="btn btn-primary btn-sm" href="" role="button" ng-click="vm.addField(field)">
+                        <span class="glyphicon glyphicon-plus"></span></a>
+                </td>
+            </tr>
+           </tbody>
+           </table>
+
+    </div>
+</div>
+
+    <div class="modal fade" id="update" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h7 class="modal-title" id="myModalLabel">Update</h7>
+                </div>
+                <div class="modal-body">
+                    <!--TEXT and TEXTAREA-->
+                    <div class="form-group" ng-if="vm.field.type=='TEXT'||vm.field.type=='TEXTAREA'">
+                        <label for="LABELTEXT">Label:</label>
+                        <input id="LABELTEXT" class="form-control input-sm"  type="text"
+                        ng-model="vm.field.label">
+
+                        <label for="PLACEHOLDERTEXT">Placeholder:</label>
+                        <input id="PLACEHOLDERTEXT" class="form-control input-sm"  type="text"
+                        ng-model="vm.field.placeholder">
+                    </div>
+                    <!--DATE-->
+                    <div class="form-group" ng-if="vm.field.type=='DATE'">
+                        <label for="LABELDATE">Label:</label>
+                        <input id="LABELDATE" class="form-control input-sm"  type="text"
+                               ng-model="vm.field.label">
+                    </div>
+
+
+                    <!--OPTIONS n CHECKBOXES n RADIOS-->
+                    <div class="form-group" ng-if="vm.field.type=='OPTIONS' ||vm.field.type=='CHECKBOXES'||vm.field.type=='RADIOS' ">
+                        <label for="LABELOPTIONS">Label:</label>
+                        <input id="LABELOPTIONS" class="form-control input-sm"  type="text"
+                               ng-model="vm.field.label">
+
+                        <label for="SELECTIONOPTIONS">OPTIONS:</label>
+                        <!--    <textarea id="SELECTIONOPTIONS" ng-model="vm.field.options" class="form-control input-sm"
+                                      ng-list="&#10;" ng-trim="false"></textarea>-->
+                        <textarea id="SELECTIONOPTIONS"
+
+                                  class="form-control input-lg" ng-model="vm.options"
+                                  ng-list="&#10;" ng-trim="false"></textarea>
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal"
+                            ng-click="vm.updatefield(vm.field)">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+
+<td>{{field.label}}</td>
+<td>{{field.type}}</td>
+<td>{{field._id}}</td>
+
+
+-->
+
+
+
+
+

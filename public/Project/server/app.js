@@ -16,12 +16,12 @@ module.exports = function(app,pool) {
         console.log('The solution is: ',results[0]);
     });*/
 
-    var post  = {id: 4, firstname: 'shiva', lastname: 'singh', gender: 'Male',
+    /*var post  = {id: 4, firstname: 'shiva', lastname: 'singh', gender: 'Male',
         age: '54', email: 'shiva@cool.com',occupation:'freedomfighter'};
     var query = pool.query('INSERT INTO Person SET ?', post, function(err, result) {
 
         console.log('The insertion is: ',result);
-    });
+    });*/
 
    /* pool.query({
         sql: 'SELECT * FROM `Person` WHERE `firstName`=?',
