@@ -95,12 +95,18 @@
 
                 console.log("found user in path")
 
-                if(Array.isArray(user))
+                if(Array.isArray(user)){
                     $rootScope.type="Volunteer"
-                else
-                    $rootScope.type="NGO"
+                    $rootScope.id = user[1].id;
+                }
 
-                console.log($rootScope.type,user)
+                else{
+                    $rootScope.type="NGO"
+                    $rootScope.id = user.id;
+                }
+
+
+                console.log($rootScope.type,$rootScope.id,user)
                 deferred.resolve();
             }
             // User is Not Authenticated

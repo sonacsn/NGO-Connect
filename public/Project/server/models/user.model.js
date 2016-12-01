@@ -13,18 +13,55 @@ module.exports = function(pool) {
     var UserModel = mongoose.model("UserModel", UserSchema);*/
 
     var api = {
-
+        findUserByCredentials: findUserByCredentials,
+        findAllProjects:findAllProjects,
+        addUser: addUser,
+        FindById: FindById,
+        //--------- to be Modified ---------------
        Delete: Delete,
        Update: Update,
        findUserByUsername: findUserByUsername,
-       FindById: FindById,
        FindAll: FindAll,
-       Create: Create,
-       findUserByCredentials: findUserByCredentials,
-        addUser: addUser
+       Create: Create
+
     };
 
     return api;
+
+function findAllProjects(userId,type){
+
+    var deferred = q.defer();
+    console.log("userid in findAllProjects model :"+userId,type)
+    var mysql = require('mysql');
+
+    /*var sql = "SELECT * FROM ?? WHERE ?? = ? ";
+    var inserts = [type, 'id', userId];
+    console.log(" searcehd value:", inserts)
+    sql = mysql.format(sql, inserts);*/
+
+    if(type=="NGO"){
+
+        pool.query({
+            sql: "SELECT * FROM Project WHERE ngo = ? ",
+            timeout: 4000 ,    //4 secs
+            values: [userId]
+        }, function (error, results, fields) {
+            if(error!=null) {
+                console.log("error connecting")
+                deferred.reject(error);
+            }
+            else{
+                console.log('The solution is: ',results);
+                console.log("length works",results.length)
+                deferred.resolve(results);
+            }
+        });
+    }
+
+    return deferred.promise;
+
+}
+
 
 
 
@@ -103,21 +140,6 @@ module.exports = function(pool) {
 
         }
         return deferred.promise;
-
-
-        /*  UserModel.findById({
-         _id: userId
-         }, function(err, user) {
-
-         if(err) {
-         console.log("kuch na labya")
-         deferred.reject(err);
-         }
-         else{
-         console.log("labgaya")
-         deferred.resolve(user);
-         }
-         });*/
 
     }
 

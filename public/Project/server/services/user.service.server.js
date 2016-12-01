@@ -1,6 +1,6 @@
 module.exports = function(app, model) {
 
-    //----------------------------- NEW CODE -------------------------
+    //----------------------------- PASSPORT -------------------------
     var passport         = require('passport');
     var LocalStrategy    = require('passport-local').Strategy;
 //----------------------------------------------------------------
@@ -8,33 +8,100 @@ module.exports = function(app, model) {
     var user_model = model;
 
     var auth = authorized;
-    app.get('/api/assignment/user',checkquery)
-    app.post('/api/assignment/user',adduser)
-    app.get('/api/assignment/user/:id', auth, GetUserById)
-    app.put('/api/assignment/user/:id', auth , updateuser)
-    app.delete('/api/assignment/user/:id',deleteUserById)
+    /*-------------------------- NEW REQUESTS NEW CODE -------------------------*/
+    app.get   ('/api/project/user/projects/:id/type/:type',     auth ,findAllProjects)
 
-//----------------------------- NEW CODE -------------------------
-
+    //-----------------------------  login/register NEW CODE -------------------------
 
     app.post  ('/api/project/login', passport.authenticate('assignment'), login);
     app.post  ('/api/assignment/logout',         logout);
     app.post  ('/api/project/register',       register);
     app.get   ('/api/assignment/loggedin',       loggedin);
-  //----------ADMIN ----------
 
+
+    //-------------------------------OLD CODE -------------------------------
+/*    app.get('/api/assignment/user',checkquery)
+    app.post('/api/assignment/user',adduser)
+    app.get('/api/assignment/user/:id', auth, GetUserById)
+    app.put('/api/assignment/user/:id', auth , updateuser)
+    app.delete('/api/assignment/user/:id',deleteUserById)
+    //-------------------------------------------------------------
     app.post  ('/api/assignment/admin/user',     auth, adduser);
     app.get('/api/assignment/admin/user/:id', auth, GetUserById);
     app.put   ('/api/assignment/admin/user',     auth, findAllUsers);
     app.put   ('/api/assignment/admin/user/:id', auth, updateUserByAdmin);
-    app.delete('/api/assignment/admin/user/:id', auth, deleteUserById);
+    app.delete('/api/assignment/admin/user/:id', auth, deleteUserById);*/
 //--------------------------------------------------------
 
+
+
+    function findAllProjects(req, res)
+    {
+
+        var userId = req.params.id;
+        var type = req.params.type
+
+        console.log("In findAllProjects service")
+        console.log(userId,type)
+        //res.sendStatus(200);
+
+        user_model.findAllProjects(userId,type)
+            .then(function (Projects) {
+                console.log("In findAllProjects service result")
+                console.log(Projects)
+                res.json(Projects)
+            },function(error){
+                    console.log("in findAllProjects reject value")
+                    res.json(error);
+                }
+            );
+            /*console.log(userId,type)
+        if(isAdmin(req.user)) {
+            var sort=req.body
+            console.log("sort in user service:",sort)
+            user_model.FindAll(sort)
+                .then(function (users) {
+                    res.json(users)
+                });
+        }
+        else
+            res.send(403)*/
+    }
+
+    function register(req,res) {
+
+        user_model.addUser(req.body)
+            .then(function (user){
+                    console.log("in service model recieved value")
+                    console.log(user)
+                    if(user!=null){
+                        console.log("d")
+                        req.login(user, function(err) {
+                            if(err) {
+                                console.log("e")
+                                res.status(400).send(err);
+                            } else {
+                                console.log("f")
+
+                                res.json(user);
+                            }
+                        });
+                    }
+                    else
+                        res.json(user);
+                },function(error){
+
+                    console.log("in service model reject value")
+                    res.json(error);
+                }
+            );
+
+    }
+    //------------------------------- LOGIN AUTH FUNCTIONS--------------------------------------------------------
 
     passport.use('assignment',new LocalStrategy({passReqToCallback: true},localassignmentstrategy));
     passport.serializeUser(serializeUser);
     passport.deserializeUser(deserializeUser);
-
 
     function localassignmentstrategy(req, username, password, done) {
 
@@ -91,35 +158,7 @@ module.exports = function(app, model) {
             next();
         }
     }
-    function register(req,res) {
 
-         user_model.addUser(req.body)
-             .then(function (user){
-                 console.log("in service model recieved value")
-             console.log(user)
-                 if(user!=null){
-                     console.log("d")
-                     req.login(user, function(err) {
-                         if(err) {
-                             console.log("e")
-                             res.status(400).send(err);
-                         } else {
-                             console.log("f")
-
-                             res.json(user);
-                         }
-                     });
-                 }
-                 else
-                     res.json(user);
-             },function(error){
-
-                 console.log("in service model reject value")
-                 res.json(error);
-                 }
-             );
-
-    }
     function login(req, res) {
         console.log("h")
         console.log("login user"+req.user.username+req.user._id)
@@ -151,7 +190,7 @@ module.exports = function(app, model) {
     }
 
 
-//----------------------------------------------------------------
+//------------------------------------- old CODE ----------------------------------------------------
 
     function updateuser(req, res) {
         var user = req.body;
@@ -196,7 +235,6 @@ module.exports = function(app, model) {
 
     }
 
-    //------------------
     function updateUserByAdmin(req, res) {
         if(isAdmin(req.user))
         {

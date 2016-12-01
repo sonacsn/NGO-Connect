@@ -2,21 +2,22 @@
     angular.module("FormBuilderApp")
         .factory("FormService", FormService);
 
-    function FormService($http,$q){
+    function FormService($http,$q,$rootScope){
         var service={
-            findAllFormsForUser:findAllFormsForUser,
+            findAllProjects:findAllProjects,
             createFormForUser:createFormForUser,
             deleteFormById:deleteFormById,
             updateFormById:updateFormById
         };
         return service;
 
-        function findAllFormsForUser(user)
+        function findAllProjects()
         {
-            var userId=user._id
+            var userId=$rootScope.id,type=$rootScope.type
+            console.log(userId,type)
             var deferred = $q.defer();
-            console.log(user)
-            $http.get("/api/assignment/user/" + userId + "/form").success(function(response) {
+
+            $http.get("/api/project/user/projects/" + userId + "/type/"+type).success(function(response) {
                 deferred.resolve(response);
             });
             console.log(deferred.promise)

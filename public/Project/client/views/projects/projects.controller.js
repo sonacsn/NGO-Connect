@@ -5,15 +5,17 @@
     function ProjectController($scope,$rootScope, $routeParams,$location,UserService,FormService) {
         var vm = this;
         function init(){
-          /* if($rootScope.user)
+           if($rootScope.user)
            {
-            FormService.findAllFormsForUser($rootScope.user).then(function(forms)
+            FormService.findAllProjects()
+
+                .then(function(projects)
         {
-            $scope.forms=forms
-            console.log($scope.forms)
+            console.log(projects)
+            $scope.projects=projects
         });
-           }*/
-            $scope.projects=[
+           }
+            /*$scope.projects=[
                 {id: 1,
                     name:'Mine Ban Treaty',
                     location:'Wyoming',
@@ -30,9 +32,9 @@
                 startDate:'2016-11-30 05:00:00',
                 volunteerCount:100 ,
                 ngo:1}
-        ]
-        }
+        ]*/
 
+        }
         init();
 
 
@@ -46,8 +48,12 @@
             vm.newproject=project
             $scope.selection=type;
 
-            if(type=='edit')
+            if(type=='edit' &&  !(vm.newproject.startDate instanceof Date)){
+               console.log(vm.newproject.startDate)
                 vm.newproject.startDate=sqlToJsDate(vm.newproject.startDate)
+                console.log(vm.newproject.startDate)
+            }
+
 
 
             console.log(vm.newproject,type)
@@ -117,22 +123,19 @@
 
             //sqlDate in SQL DATETIME format ("yyyy-mm-dd hh:mm:ss.ms")
             var sqlDateArr1 = sqlDate.split("-");
+
             //format of sqlDateArr1[] = ['yyyy','mm','dd hh:mm:ms']
             var sYear = sqlDateArr1[0];
-            var sMonth = (Number(sqlDateArr1[1]) - 1).toString();
-            var sqlDateArr2 = sqlDateArr1[2].split(" ");
+            var sMonth = (Number(sqlDateArr1[1])).toString();
+            var sqlDateArr2 = sqlDateArr1[2].split("T");
             //format of sqlDateArr2[] = ['dd', 'hh:mm:ss.ms']
             var sDay = sqlDateArr2[0];
-            var sqlDateArr3 = sqlDateArr2[1].split(":");
-            //format of sqlDateArr3[] = ['hh','mm','ss.ms']
-            var sHour = sqlDateArr3[0];
-            var sMinute = sqlDateArr3[1];
-            var sqlDateArr4 = sqlDateArr3[2].split(".");
-            //format of sqlDateArr4[] = ['ss','ms']
-            var sSecond = sqlDateArr4[0];
-           var date= new Date(sYear,sMonth,sDay,sHour,sMinute,sSecond);
-
+          //,sHour,sMinute,sSecond
+            console.log (sYear,sMonth,sDay);
+           var date= new Date(sYear,sMonth,sDay);
+            console.log(date)
             return date;
+
         }
 
 
