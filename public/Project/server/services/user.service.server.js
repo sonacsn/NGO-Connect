@@ -10,7 +10,9 @@ module.exports = function(app, model) {
     var auth = authorized;
     /*-------------------------- NEW REQUESTS NEW CODE -------------------------*/
     app.get   ('/api/project/user/projects/:id/type/:type',     auth ,findAllProjects)
-    app.put('/api/project/NgoProject/:id',deleteProjectById)
+    app.put('/api/project/NgoProject/:id',     auth ,deleteProjectById)
+    app.post("/api/project/NgoProject/",     auth ,createProject)
+    app.put("/api/project/NgoProject/",     auth ,updateProject)
     //-----------------------------  login/register NEW CODE -------------------------
 
     app.post  ('/api/project/login', passport.authenticate('assignment'), login);
@@ -32,6 +34,48 @@ module.exports = function(app, model) {
     app.put   ('/api/assignment/admin/user/:id', auth, updateUserByAdmin);
     app.delete('/api/assignment/admin/user/:id', auth, deleteUserById);*/
 //--------------------------------------------------------
+
+
+    function updateProject(req, res) {
+
+        var project= req.body;
+        console.log("In createProject service")
+        console.log(project)
+        //res.sendStatus(200);
+
+        user_model.updateProject(project)
+            .then(function (status) {
+                    console.log("In createProject service result")
+                    console.log(status)
+                    res.sendStatus(200)
+                }, function (error) {
+                    console.log("in createProject reject value")
+                    res.sendStatus(400)
+                }
+            );
+    }
+
+
+
+    function createProject(req, res) {
+
+        var project= req.body;
+        console.log("In createProject service")
+        console.log(project)
+        //res.sendStatus(200);
+
+        user_model.createProject(project)
+            .then(function (status) {
+                    console.log("In createProject service result")
+                    console.log(status)
+                    res.sendStatus(200)
+                }, function (error) {
+                    console.log("in createProject reject value")
+                    res.sendStatus(400)
+                }
+            );
+    }
+
 
 
     function deleteProjectById(req, res) {

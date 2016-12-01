@@ -53,10 +53,7 @@
                 vm.newproject.startDate=sqlToJsDate(vm.newproject.startDate)
                 console.log(vm.newproject.startDate)
             }
-
-
-
-            console.log(vm.newproject,type)
+            console.log(vm.newproject)
 
            /* $scope.selectformindex = index;
             $scope.form = {
@@ -70,7 +67,41 @@
 
         function updateProject(project)
         {
-            console.log(project)
+            var cloneProject=JSON.parse(JSON.stringify(project));
+
+            cloneProject.startDate = cloneProject.startDate.split("T")[0];
+            console.log(cloneProject.startDate)
+
+            console.log(cloneProject)
+
+            FormService.updateProject(cloneProject)
+                .then(function(status)
+                {
+                    console.log(status)
+
+                    if(status=="OK")
+                        init();
+                    else
+                        alert("Problem with updating the Project")
+                });
+
+
+            //cloneProject.startDate="sdxc"
+         /*
+            console.log(cloneProject)
+             var date = cloneProject.startDate
+           date=sqlDate(date)
+            cloneProject.startDate=date
+            console.log(date)*/
+
+          /*  console.log(project)
+            var date = project.startDate
+            console.log(date)
+            project.startDate=null
+            date=sqlDate(date)
+            project.startDate=date
+            console.log(date)*/
+
            /*FormService.updateFormById(form._id,form)
                .then(function(Newform)
                 {
@@ -79,8 +110,23 @@
                     $scope.selectformindex=-1;
 
                 })*/
-
         }
+
+        function sqlDate(date) {
+
+           // var sqlDate=date.getFullYear()+'-'+date.getMonth() +'-'+date.getDate();
+            date = date.getUTCFullYear() + '-' +
+                ('00' + (date.getUTCMonth() + 1)).slice(-2) + '-' +
+                ('00' + date.getUTCDate()).slice(-2) + ' ' +
+                ('00' + date.getUTCHours()).slice(-2) + ':' +
+                ('00' + date.getUTCMinutes()).slice(-2) + ':' +
+                ('00' + date.getUTCSeconds()).slice(-2);
+
+
+            return date
+        }
+
+
         function deleteProject(project)
         {
             console.log(project.id)
@@ -98,11 +144,28 @@
         }
         function addProject(project)
         {
-            console.log(project)
-            var date = project.startDate
-            project.startDate=sqlDate(date)
+            var cloneProject=JSON.parse(JSON.stringify(project));
 
-            console.log(project.startDate)
+            cloneProject.startDate = cloneProject.startDate.split("T")[0];
+            console.log(cloneProject.startDate)
+            cloneProject.ngo=$rootScope.id
+
+            console.log(cloneProject)
+
+            FormService.createProject(cloneProject)
+                .then(function(status)
+                {
+                    console.log(status)
+
+                    if(status=="OK")
+                        init();
+                    else
+                        alert("Problem with adding the Project")
+                });
+          /*
+            project.startDate=sqlDate(date)
+            console.log(project.startDate)*/
+
             /*FormService.createFormForUser($rootScope.user._id,title)
                 .then(function(forms)
             {
@@ -113,16 +176,6 @@
         }
 
 
-        function sqlDate(date) {
-
-            date = date.getUTCFullYear() + '-' +
-                ('00' + (date.getUTCMonth() + 1)).slice(-2) + '-' +
-                ('00' + date.getUTCDate()).slice(-2) + ' ' +
-                ('00' + date.getUTCHours()).slice(-2) + ':' +
-                ('00' + date.getUTCMinutes()).slice(-2) + ':' +
-                ('00' + date.getUTCSeconds()).slice(-2);
-
-        }
 
 
         function sqlToJsDate(sqlDate){

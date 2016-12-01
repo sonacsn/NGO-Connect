@@ -18,6 +18,8 @@ module.exports = function(pool) {
         addUser: addUser,
         FindById: FindById,
         deleteProjectById:deleteProjectById,
+        createProject:createProject,
+        updateProject:updateProject,
         //--------- to be Modified ---------------
        Delete: Delete,
        Update: Update,
@@ -30,11 +32,89 @@ module.exports = function(pool) {
     return api;
 
 
+    function updateProject(project){
+
+        var deferred = q.defer();
+        console.log("userid in createProject model :  ",project,project.id)
+        var mysql = require('mysql');
+
+        var id=project.id
+        delete project.id;
+        /*var sql = "SELECT * FROM ?? WHERE ?? = ? ";
+         var inserts = [type, 'id', userId];
+         console.log(" searcehd value:", inserts)
+         sql = mysql.format(sql, inserts);*/
+
+        // if(type=="NGO")
+        {
+
+            pool.query({
+                sql:  'UPDATE Project SET ? WHERE id = ? ',
+                timeout: 4000 ,    //4 secs
+                values: [project,id]
+            }, function (error, results, fields) {
+                if(error!=null) {
+                    console.log("error connecting")
+                    console.log(error)
+                    deferred.reject(error);
+                }
+                else{
+                    console.log('The solution is: ',results);
+                    console.log("length works",results.length)
+                    deferred.resolve(results);
+                }
+            });
+        }
+
+        return deferred.promise;
+
+    }
+
+
+
+    function createProject(project) {
+
+        var deferred = q.defer();
+        console.log("userid in createProject model :  ",project)
+        var mysql = require('mysql');
+
+        /*var sql = "SELECT * FROM ?? WHERE ?? = ? ";
+         var inserts = [type, 'id', userId];
+         console.log(" searcehd value:", inserts)
+         sql = mysql.format(sql, inserts);*/
+
+        // if(type=="NGO")
+        {
+
+            pool.query({
+                sql:  'INSERT INTO Project SET ?',
+                timeout: 4000 ,    //4 secs
+                values: [project]
+            }, function (error, results, fields) {
+                if(error!=null) {
+                    console.log("error connecting")
+                    console.log(error)
+                    deferred.reject(error);
+                }
+                else{
+                    console.log('The solution is: ',results);
+                    console.log("length works",results.length)
+                    deferred.resolve(results);
+                }
+            });
+        }
+
+        return deferred.promise;
+
+    }
+
+
+
     function deleteProjectById(projectId)
     {
 
         var deferred = q.defer();
-        console.log("userid in findAllProjects model :  ",projectId)
+        console.log("userid in deleteProjectById model :  ",projectId)
         var mysql = require('mysql');
 
         /*var sql = "SELECT * FROM ?? WHERE ?? = ? ";

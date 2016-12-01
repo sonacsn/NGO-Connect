@@ -6,12 +6,45 @@
         var service={
             findAllProjects:findAllProjects,
             deleteProjectById:deleteProjectById,
+            createProject:createProject,
+            updateProject:updateProject,
             //To be Modified.....
             createFormForUser:createFormForUser,
             deleteFormById:deleteFormById,
             updateFormById:updateFormById
         };
         return service;
+
+
+
+        function updateProject(project)
+        {
+
+            console.log(project)
+            var deferred = $q.defer();
+
+            $http.put("/api/project/NgoProject/",project).success(function(response) {
+                deferred.resolve(response);
+            });
+            console.log(deferred.promise)
+            return deferred.promise;
+        }
+
+
+        function createProject(project)
+        {
+
+            console.log(project)
+            var deferred = $q.defer();
+
+            $http.post("/api/project/NgoProject/",project).success(function(response) {
+                deferred.resolve(response);
+            });
+            console.log(deferred.promise)
+            return deferred.promise;
+        }
+
+
 
         function findAllProjects()
         {
