@@ -100,7 +100,7 @@
                 else
                     $rootScope.type="NGO"
 
-                console.log(user)
+                console.log($rootScope.type,user)
                 deferred.resolve();
             }
             // User is Not Authenticated

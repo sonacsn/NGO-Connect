@@ -162,7 +162,7 @@ module.exports = function(pool) {
         sql = mysql.format(sql, inserts);
 
 
-            if(type="Volunteer"){
+            if(type=="Volunteer"){
 
                 pool.query({
                     sql: sql,
@@ -351,6 +351,7 @@ module.exports = function(pool) {
     }
 
     function Update(id, user) {
+
         var deferred = q.defer();
         var uname = user.username;
         var pass = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10), null);
