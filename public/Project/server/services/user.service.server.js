@@ -19,7 +19,7 @@ module.exports = function(app, model) {
 
     app.post  ('/api/project/login', passport.authenticate('assignment'), login);
     app.post  ('/api/assignment/logout',         logout);
-    app.post  ('/api/assignment/register',       register);
+    app.post  ('/api/project/register',       register);
     app.get   ('/api/assignment/loggedin',       loggedin);
   //----------ADMIN ----------
 
@@ -31,24 +31,16 @@ module.exports = function(app, model) {
 //--------------------------------------------------------
 
 
-    passport.use('assignment',new LocalStrategy({passwordField:'type' ,passReqToCallback: true},localassignmentstrategy));
+    passport.use('assignment',new LocalStrategy({passReqToCallback: true},localassignmentstrategy));
     passport.serializeUser(serializeUser);
     passport.deserializeUser(deserializeUser);
 
 
     function localassignmentstrategy(req, username, password, done) {
 
-       /* var credentials = {
-            username: username,
-            password: password
-        };
-        console.log(credentials)
-*/
-        console.log(username,password,req.body)
-
-
+        console.log(username,password,req.body.type)
         user_model
-            .findUserByCredentials(username,req.body.type)
+            .findUserByCredentials(username,password,req.body.type)
             .then(
                 function(user) {
                     if (!user) { return done(null, false);
@@ -65,13 +57,13 @@ module.exports = function(app, model) {
     }
 
     function serializeUser(user, done) {
-        console.log("in serialize")
+        console.log("in serialize",user)
         done(null, user);
     }
 
     function deserializeUser(user, done) {
 
-
+        console.log("in deserialize",user)
         done(null, user);
 
         /* user_model.FindById(user._id)
@@ -92,50 +84,34 @@ module.exports = function(app, model) {
             next();
         }
     }
-    function register(req, res) {
-        var newUser = req.body;
-        if(newUser.username=="admin")
-            newUser.roles = ['admin'];
-        else
-        newUser.roles = ['student'];
+    function register(req,res) {
 
-        console.log("newUser"+newUser)
-        user_model.findUserByUsername(newUser.username)
-            .then(
-                function(user){
-                    if(user) {
-                        console.log("a")
-                        res.json(null);
-                    } else {
-                        console.log("b")
-                        return user_model.Create(newUser);
-                }
-                },
-                function(err){
-                    console.log("c")
-                    res.status(400).send(err);
-                }
-            )
-            .then(
-                function(user){
-                    if(user){
-                        console.log("d")
-                        req.login(user, function(err) {
-                            if(err) {
-                                console.log("e")
-                                res.status(400).send(err);
-                            } else {
-                                console.log("f")
-                                res.json(user);
-                            }
-                        });
-                    }
-                },
-                function(err){
-                    console.log("g")
-                    res.status(400).send(err);
-                }
-            );
+         user_model.addUser(req.body)
+             .then(function (user){
+                 console.log("in service model recieved value")
+             console.log(user)
+                 if(user!=null){
+                     console.log("d")
+                     req.login(user, function(err) {
+                         if(err) {
+                             console.log("e")
+                             res.status(400).send(err);
+                         } else {
+                             console.log("f")
+
+                             res.json(user);
+                         }
+                     });
+                 }
+                 else
+                     res.json(user);
+             },function(error){
+
+                 console.log("in service model reject value")
+                 res.json(error);
+                 }
+             );
+
     }
     function login(req, res) {
         console.log("h")
@@ -145,9 +121,21 @@ module.exports = function(app, model) {
     }
 
     function loggedin(req, res) {
-        console.log("In loggedin")
+
         console.log("In loggedin value"+req.user)
-        res.send(req.isAuthenticated() ? req.user : '0');
+
+
+        if(req.isAuthenticated() )
+        {
+            console.log("auth done")
+            res.send(req.user);
+        }
+
+        else{
+            res.sendStatus(403);
+            console.log("auth not done")
+        }
+
     }
 
     function logout(req, res) {

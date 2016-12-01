@@ -4,6 +4,31 @@ module.exports = function(app,pool) {
     var modeluser = require("./models/user.model.js")(pool);
     require("./services/user.service.server.js")(app, modeluser);
 
+
+/*
+
+   var user= { name: 'ssss',
+        username: 'ssss',
+        password: 'ssss',
+        type: 'CommunityBased',
+        location: 'ssss',
+        causeDescription: 'ssssssssssssssssssssssssssss' }
+
+
+    var query = pool.query('INSERT INTO NGO SET ?', user, function(err, result) {
+
+        if(err!=null) {
+            console.log(err)
+        }
+        else {
+            console.log('The solution is: ',result);
+            user.id=result.insertId;
+            console.log(user)
+
+        }
+
+    });*/
+
   /*  pool.query('SELECT * FROM NGO', function(err, rows, fields) {
         if (err) throw err;
         console.log('The solution is: ',rows);

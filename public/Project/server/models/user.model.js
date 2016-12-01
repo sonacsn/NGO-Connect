@@ -20,7 +20,8 @@ module.exports = function(pool) {
        FindById: FindById,
        FindAll: FindAll,
        Create: Create,
-       findUserByCredentials: findUserByCredentials
+       findUserByCredentials: findUserByCredentials,
+        addUser: addUser
     };
 
     return api;
@@ -35,25 +36,174 @@ module.exports = function(pool) {
     };
 
 
-
-
-    function findUserByCredentials(username,type) {
+    function addUser(user) {
+       //console.log("reached here...");
         var deferred = q.defer();
         var mysql = require('mysql');
 
-        var sql = "SELECT * FROM ?? WHERE ?? = ?";
-        if(type==="Volunteer"){
+        console.log(Array.isArray(user))
 
-            var inserts = ['Person', 'firstname', username];
-            console.log("IN Volunteer")
-        }
-            else
+
+        if(Array.isArray(user))
         {
-            var inserts = [type, 'name', username];
-            console.log("IN NGO")
+        pool.query({
+            sql: 'SELECT * FROM `Volunteer` WHERE `username` = ?',
+            timeout: 4000, // 40s
+            values: user[1].username
+        }, function (error, results, fields) {
+
+            if(error!=null) {
+                console.log("error connecting")
+                console.log("error connecting")
+                deferred.reject(error);
+            }
+            else if(results.length>0){
+                console.log('The solution is: ',results);
+                deferred.resolve(null);
+            }
+            else{
+
+                var query = pool.query('INSERT INTO Person SET ?', user[0], function(err, result) {
+
+                    console.log('The insertion is: ',result);
+                    if (result!=undefined) {
+                        user[1].id=result.insertId;
+                        user[0].id=result.insertId;
+                        console.log(user[1])
+                        var query1 = pool.query('INSERT INTO Volunteer SET ?', user[1],
+                            function(err, result2) {
+
+
+                                if(err!=null) {
+                                    console.log("error connecting")
+                                    deferred.reject(error);
+                                }
+                                else{
+                                    console.log('The insertion  is: ',result2);
+                                    console.log('The returned value is: ',user);
+                                    deferred.resolve(user);
+
+
+                                }
+
+                            });
+                    }
+
+                    if(err!=null) {
+                        console.log("error connecting")
+                        deferred.reject(error);
+                    }
+
+                });
+
+            }
+        });
+
         }
+
+        else{
+           console.log("NGO checking")
+            pool.query({
+                sql: 'SELECT * FROM `NGO` WHERE `username` = ?',
+                timeout: 4000, // 40s
+                values: user.username
+            }, function (error, results, fields) {
+
+                if(error!=null) {
+                    console.log("error connecting")
+                    console.log("error connecting")
+                    deferred.reject(error);
+                }
+                else if(results.length>0){
+                    console.log('The solution is: ',results);
+                    deferred.resolve(null);
+                }
+                else{
+                    console.log("NGO insert")
+                    console.log(user)
+                    var query = pool.query('INSERT INTO NGO SET ?', user, function(err, result) {
+
+                        if(err!=null) {
+                            console.log("error connecting")
+                            console.log("error connecting")
+                            deferred.reject(err);
+                        }
+                        else {
+                            console.log('The solution is: ',result);
+                            user.id=result.insertId;
+
+                            console.log(user)
+                            deferred.resolve(user);
+                        }
+
+                    });
+                }
+            });
+
+        }
+
+
+         return deferred.promise;
+
+            //console.log(result.insertId);
+    }
+
+
+
+    function findUserByCredentials(username,password,type) {
+        var deferred = q.defer();
+        var mysql = require('mysql');
+       console.log (username,password,type)
+        var sql = "SELECT * FROM ?? WHERE ?? = ? AND ?? =?";
+
+            var inserts = [type, 'username', username,'password',password];
+            console.log("IN Volunteer", inserts)
+
         sql = mysql.format(sql, inserts);
 
+
+            if(type="Volunteer"){
+
+                pool.query({
+                    sql: sql,
+                    timeout: 40000
+                }, function (error, results, fields) {
+                    console.log('The solution is: ',results);
+
+                    if(error!=null) {
+                        console.log("error connecting")
+                        deferred.reject(error);
+                    }
+                    else{
+                        console.log("length works",results)
+                        pool.query({
+                            sql: 'SELECT * FROM `Person` WHERE `id` = ?',
+                            timeout: 40000, // 40s
+                            values: [results[0].id]
+                        }, function (error, results2, fields) {
+                            if(error!=null) {
+                                console.log("error connecting 2nd")
+                                deferred.reject(error);
+                            }
+                            else{
+
+                                console.log('The 2nd solution is: ',results2[0]);
+                               console.log(results[0],results2[0])
+                               var res=[results2[0],results[0]]
+                                console.log(res)
+                                deferred.resolve(res);
+                            }
+
+                        });
+
+
+                    }
+                });
+
+
+            }
+
+            else{
         pool.query({
             sql: sql,
             timeout: 40000
@@ -64,47 +214,15 @@ module.exports = function(pool) {
                 console.log("error connecting")
                 deferred.reject(error);
             }
-            else if(results.length==1){
-                console.log("length works")
+            else{
+                console.log("length works",results)
+
                 deferred.resolve(results[0]);
             }
-            else{
-                console.log("more or less users found")
-                deferred.reject(0);
-            }
-
         });
+
+            }
         return deferred.promise;
-/*
-
-        pool.query({
-            sql: 'SELECT * FROM `NGO` WHERE `location` = ?',
-            timeout: 40000, // 40s
-            values: ['New York']
-        }, function (error, results, fields) {
-            console.log('The solution is: ',results[0]);
-        });
-*/
-
-        /*UserModel.findOne({
-            username: newuser.username
-        }, function(err, founduser) {
-
-            if(err) {
-                deferred.reject(err);
-            }
-            else{
-                console.log("found user"+founduser)
-                if (bcrypt.compareSync(newuser.password, founduser.password))
-                {
-                deferred.resolve(founduser);
-                    console.log("password match")
-                }
-                else
-                    deferred.reject(err);
-            }
-        });*/
-
 
     }
 
@@ -215,7 +333,7 @@ module.exports = function(pool) {
 
     }
 
-    function findUserByUsername(username) {
+    function findUserByUsername(username,password) {
         var deferred = q.defer();
         console.log("by user"+username)
         UserModel.findOne({username: username}, function(err, user) {
@@ -280,7 +398,6 @@ module.exports = function(pool) {
         }
        return users[i];*/
     }
-
 
 
 

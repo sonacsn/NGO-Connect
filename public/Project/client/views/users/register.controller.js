@@ -11,28 +11,50 @@
         $scope.selected=1;
         }
         init();
-        function adduser(user) {
-            console.log(user)
-            if (user.username !== undefined && user.password !== undefined
-                && user.verifypassword !== undefined && user.password == user.verifypassword
-                && user.emails !== undefined)
-            {
-                UserService.addUser(user)
-                    .then(function (user) {
+        function adduser(user,type) {
 
-                        if(user!=null)
-                        {
-                        $rootScope.user =user
-                        console.log($rootScope.user)
-                        $location.path("/profile");
-                        }
-                        else
-                            alert("User Exists")
-                    } )
+            if(type=='Volunteer') {
+                if (user.username !== undefined && user.password !== undefined
+                    && user.firstName !== undefined && user.lastName != undefined
+                    && user.emails !== undefined && user.gender !== undefined) {
+                    UserService.addUser(user, type)
+                        .then(function (user) {
+
+                            if (user != null) {
+                                $rootScope.user = user
+                                console.log($rootScope.user)
+                                $location.path("/profile");
+                            }
+                            else
+                                alert("User Exists")
+                        })
+                }
+                else {
+                    alert("Enter proper Credentials")
+                }
             }
-            else
-            {
-                alert("Enter proper Credentials")
+            else if(type=='NGO'){
+                if(user.name!== undefined && user.username !== undefined &&
+                    user.password !== undefined && user.type!== undefined &&
+                    user.location!== undefined && user.causeDescription!== undefined){
+
+                    console.log(user,type)
+
+                    UserService.addUser(user, type)
+                        .then(function (user) {
+
+                            if (user != null) {
+                                $rootScope.user = user
+                                console.log($rootScope.user)
+                                $location.path("/profile");
+                            }
+                            else
+                                alert("User Exists")
+                        })
+                }
+                else {
+                    alert("Enter proper Credentials")
+                }
             }
         }
     }

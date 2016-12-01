@@ -95,10 +95,11 @@
 
                 console.log("found user in path")
 
-                if(user.email!=null)
+                if(Array.isArray(user))
                     $rootScope.type="Volunteer"
                 else
                     $rootScope.type="NGO"
+
                 console.log(user)
                 deferred.resolve();
             }

@@ -138,7 +138,7 @@
                          </td>
 
                      </tr>-->
-                    <tr ng-repeat-start="volunteer in volunteers"
+                    <tr ng-repeat="volunteer in volunteers"
                         ng-class="{'selected':$index == selectedRow,
                         success: volunteer.status == 'approved',
                         danger: volunteer.status == 'declined',
@@ -153,13 +153,13 @@
                             {{volunteer.status}}
                         </td>
                     </tr>
-                    <tr ng-if="volunteer.expanded" ng-repeat-end="">
+                   <!-- <tr ng-if="volunteer.expanded" ng-repeat-end="">
                         <td colspan="2">
                             <div>
                                 {{volunteer}}
                             </div>
                         </td>
-                    </tr>
+                    </tr>-->
                     </tbody>
                 </table>
 

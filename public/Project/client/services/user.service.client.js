@@ -61,23 +61,23 @@
         }
         function findUserByCredentials(user)
         {
-               var deferred = $q.defer();
-           /* var user={username:username,
-                password:password }*/
+            var deferred = $q.defer();
+            /* var user={username:username,
+             password:password }*/
             console.log(user)
 
-               //$http.get("/api/assignment/user?username=" + username + "&password=" + password)
+            //$http.get("/api/assignment/user?username=" + username + "&password=" + password)
 
             $http.post("/api/project/login", user) .success(function(response){
-                   deferred.resolve(response);
-               });
+                deferred.resolve(response);
+            });
 
-               return deferred.promise;
+            return deferred.promise;
         }
 
         function findAllUsers(sort)
         {
-           /* var sort={by:'username',order:1}*/
+            /* var sort={by:'username',order:1}*/
             console.log("inside find all",sort.by,sort.order)
             var deferred = $q.defer();
             $http.put("/api/assignment/admin/user",sort).success(function(response){
@@ -94,17 +94,39 @@
 
             return deferred.promise;
         }
-        function addUser(user)
+        function addUser(user,type)
         {
-            var newuser ={"firstName":"",  "lastName":"","username":user.username,
-                          "password":user.password,"emails":[user.emails]};
-            console.log(user)
-            var deferred = $q.defer();
-            $http.post("/api/assignment/register",newuser).success(function(response){
-                deferred.resolve(response);
+            if(type=='Volunteer') {
+                var person = [{
+                    "firstName": user.firstName,
+                    "lastName": user.lastName,
+                    "email": user.emails,
+                    "gender": user.gender,
+                    "age": user.age,
+                    "occupation":user.occupation
+                },
+                    {"username": user.username, "password": user.password,
+                        "interests":user.interests}];
+                console.log(user)
+                var deferred = $q.defer();
+                $http.post("/api/project/register", person).success(function (response) {
+                    deferred.resolve(response);
+                });
+            }
+            else if(type=='NGO') {
 
 
-            });
+                console.log("client.serive.NGO")
+                var ngo = {
+                    "name": user.name, "username": user.username, "password": user.password, "type": user.type,
+                    "memberSize": user.memberSize, "location": user.location, "causeDescription": user.causeDescription
+                };
+                console.log(ngo)
+                var deferred = $q.defer();
+                $http.post("/api/project/register", ngo).success(function (response) {
+                    deferred.resolve(response);
+                });
+            }
             console.log(deferred.promise)
             return deferred.promise;
 
@@ -133,7 +155,3 @@
 
     }
 })();
-
-
-
-
