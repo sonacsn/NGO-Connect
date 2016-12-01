@@ -10,6 +10,7 @@ module.exports = function(app, model) {
     var auth = authorized;
     /*-------------------------- NEW REQUESTS NEW CODE -------------------------*/
     app.get   ('/api/project/user/projects/:id/type/:type',     auth ,findAllProjects)
+    app.put('/api/project/user/:id', auth, updateuser)
     app.put('/api/project/NgoProject/:id',     auth ,deleteProjectById)
     app.post("/api/project/NgoProject/",     auth ,createProject)
     app.put("/api/project/NgoProject/",     auth ,updateProject)
@@ -34,6 +35,27 @@ module.exports = function(app, model) {
     app.put   ('/api/assignment/admin/user/:id', auth, updateUserByAdmin);
     app.delete('/api/assignment/admin/user/:id', auth, deleteUserById);*/
 //--------------------------------------------------------
+
+    function updateuser(req, res) {
+
+        var user = req.body;
+
+        console.log("XXXXXXXXXXXXXX")
+        console.log(user)
+        //var userId = req.params.id;
+        user_model
+            .Update(user)
+            .then(function(newuser){
+                console.log(newuser)
+                res.json(newuser)}, function (error) {
+                    console.log("in createProject reject value")
+                    res.sendStatus(400)
+                }
+                );
+
+    }
+
+
 
 
     function updateProject(req, res) {
@@ -204,6 +226,8 @@ module.exports = function(app, model) {
          user_model.FindById(id,type)
          .then(
          function(user){
+
+            console.log("in deserial after finding")
          done(null, user);
          },
          function(err){
@@ -214,7 +238,7 @@ module.exports = function(app, model) {
     }
     function authorized (req, res, next) {
         if (!req.isAuthenticated()) {
-            res.send(401);
+            res.sendStatus(401);
         } else {
             next();
         }
@@ -253,17 +277,7 @@ module.exports = function(app, model) {
 
 //------------------------------------- old CODE ----------------------------------------------------
 
-    function updateuser(req, res) {
-        var user = req.body;
-        var userId = req.params.id;
-        user_model
-            .Update(userId, user)
-            .then(function(newuser){
-                console.log(newuser)
-                res.json(newuser)});
-
-    }
-    function GetUserById(req, res) {
+  /*  function GetUserById(req, res) {
         var userId = req.params.id;
        user_model.findById(userId)
        .then(function(user){
@@ -376,5 +390,5 @@ module.exports = function(app, model) {
         }
         return false;
     }
-
+*/
 };

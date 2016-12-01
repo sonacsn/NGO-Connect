@@ -20,36 +20,25 @@
 
         };
         return service;
-        function addUserByAdmin(user)
-        {
-
-            console.log(user)
-            var deferred = $q.defer();
-            $http.post("/api/assignment/admin/user",user).success(function(response){
-                deferred.resolve(response);
 
 
-            });
-            console.log(deferred.promise)
-            return deferred.promise;
-
-        }
-
-
-
-        function updateUserByAdmin(user)
+        function updateUser(user,id)
         {
 
             console.log(user)
             var deferred = $q.defer();
 
-            $http.put("/api/assignment/admin/user/" + user._id, user).success(function(response){
+            $http.put("/api/project/user/" + id, user).success(function(response){
                 deferred.resolve(response);
             });
             console.log(deferred.promise)
             return deferred.promise;
 
         }
+
+
+
+
         function logout() {
 
             var deferred = $q.defer();
@@ -75,25 +64,6 @@
             return deferred.promise;
         }
 
-        function findAllUsers(sort)
-        {
-            /* var sort={by:'username',order:1}*/
-            console.log("inside find all",sort.by,sort.order)
-            var deferred = $q.defer();
-            $http.put("/api/assignment/admin/user",sort).success(function(response){
-                deferred.resolve(response);
-            });
-            return deferred.promise;
-        }
-        function getUserById(id)
-        {
-            var deferred=$q.defer();
-            $http.get("/api/assignment/user/"+id).success(function(response){
-                deferred.resolve(response);
-            });
-
-            return deferred.promise;
-        }
         function addUser(user,type)
         {
             if(type=='Volunteer') {
@@ -131,6 +101,70 @@
             return deferred.promise;
 
         }
+
+
+
+
+
+
+   //-------------------- OLD CODE ------------------------------
+
+
+
+
+
+
+        function addUserByAdmin(user)
+        {
+
+            console.log(user)
+            var deferred = $q.defer();
+            $http.post("/api/assignment/admin/user",user).success(function(response){
+                deferred.resolve(response);
+
+
+            });
+            console.log(deferred.promise)
+            return deferred.promise;
+
+        }
+
+
+
+        function updateUserByAdmin(user)
+        {
+
+            console.log(user)
+            var deferred = $q.defer();
+
+            $http.put("/api/assignment/admin/user/" + user._id, user).success(function(response){
+                deferred.resolve(response);
+            });
+            console.log(deferred.promise)
+            return deferred.promise;
+
+        }
+
+        function findAllUsers(sort)
+        {
+            /* var sort={by:'username',order:1}*/
+            console.log("inside find all",sort.by,sort.order)
+            var deferred = $q.defer();
+            $http.put("/api/assignment/admin/user",sort).success(function(response){
+                deferred.resolve(response);
+            });
+            return deferred.promise;
+        }
+        function getUserById(id)
+        {
+            var deferred=$q.defer();
+            $http.get("/api/assignment/user/"+id).success(function(response){
+                deferred.resolve(response);
+            });
+
+            return deferred.promise;
+        }
+
         function deleteUserById(id)
         {
             var deferred = $q.defer();
@@ -138,19 +172,6 @@
                 deferred.resolve(response);
             });
             return deferred.promise;
-        }
-        function updateUser(user,id)
-        {
-
-            console.log(user)
-            var deferred = $q.defer();
-
-            $http.put("/api/assignment/user/" + id, user).success(function(response){
-                deferred.resolve(response);
-            });
-            console.log(deferred.promise)
-            return deferred.promise;
-
         }
 
     }

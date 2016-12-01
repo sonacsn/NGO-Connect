@@ -20,9 +20,9 @@ module.exports = function(pool) {
         deleteProjectById:deleteProjectById,
         createProject:createProject,
         updateProject:updateProject,
+       Update: Update,
         //--------- to be Modified ---------------
        Delete: Delete,
-       Update: Update,
        findUserByUsername: findUserByUsername,
        FindAll: FindAll,
        Create: Create
@@ -30,6 +30,55 @@ module.exports = function(pool) {
     };
 
     return api;
+
+
+    function Update(user) {
+
+        var deferred = q.defer();
+        var mysql = require('mysql');
+        if(Array.isArray(user)) {
+            var id = user[0].id;
+            var query = pool.query('Update Person SET ? WHERE id = ?',[user[0],id],function(err,res){
+                if(err!=null) {
+                    console.log("error connecting")
+                    console.log(err)
+                    deferred.reject(err);
+                }
+                else {
+                    console.log('The solution is: ',res);
+
+                    var q2 = pool.query('Update Volunteer SET ? WHERE id = ?',[user[1],id],function(err,result){
+                        if(err!=null) {
+                            console.log("error connecting")
+                            console.log(err)
+                            deferred.reject(err);
+                        }
+                        else {
+                            console.log('The solution is: ', result);
+                            deferred.resolve(user)
+                        }
+                    });
+                }
+            });
+        }
+        else{
+            var id = user.id;
+            var query = pool.query('Update NGO SET ? WHERE id = ?',[user,id],function(err,res){
+                if(err!=null){
+                    console.log("error connecting update user")
+                    console.log(err)
+                    deferred.reject(err);
+                }
+                else{
+                    console.log('the solution is: ',res);
+                    deferred.resolve(user)
+                }
+            });
+        }
+        return deferred.promise;
+
+
+    }
 
 
     function updateProject(project){
@@ -186,7 +235,7 @@ function findAllProjects(userId,type){
 
     function FindById(userId,type) {
         var deferred = q.defer();
-        console.log("userid in model findbyid:"+userId)
+        console.log("userid in model findbyid:"+userId,type)
 
         var mysql = require('mysql');
         console.log (userId,type)
@@ -239,18 +288,18 @@ function findAllProjects(userId,type){
         }
 
         else{
+            console.log("in else of findbyid")
             pool.query({
                 sql: sql,
                 timeout: 40000
             }, function (error, results, fields) {
-                console.log('The solution is: ',results);
 
                 if(error!=null) {
                     console.log("error connecting")
                     deferred.reject(error);
                 }
                 else{
-                    console.log("length works",results)
+                    console.log("findbyId found result",results)
 
                     deferred.resolve(results[0]);
                 }
@@ -281,8 +330,8 @@ function findAllProjects(userId,type){
             }, function (error, results, fields) {
 
                 if(error!=null) {
-                    console.log("error connecting")
-                    console.log("error connecting")
+                    console.log("error connecting add user ")
+
                     deferred.reject(error);
                 }
                 else if(results.length>0){
@@ -586,57 +635,6 @@ function findAllProjects(userId,type){
 
         return deferred.promise;
     }
-
-    function Update(id, user) {
-
-        var deferred = q.defer();
-        var uname = user.username;
-        var pass = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10), null);
-       /* bcrypt.hash(user.password, 10, function(err, hash) {
-            // Store hash in your password DB.
-            var pass = hash
-        });*/
-        //var pass = bcrypt.hashSync(user.password, salt);
-        var fname = user.firstName;
-        var lname = user.lastName;
-        var e = user.emails;
-        var roles=user.roles
-
-        UserModel.findById(id, function(err, user) {
-            user.username = uname;
-            user.password = pass;
-            user.firstName = fname;
-            user.lastName = lname;
-            user.email =user.emails.push(e);
-            user.roles=roles
-            user.save(function(err, user)
-            {
-                if(err) {
-                    deferred.reject(err);
-                }
-                else{
-                    deferred.resolve(user);
-                }
-            });
-        });
-
-        return deferred.promise;
-
-
-        //OLD CODE
-     /*   for (i = 0; i < users.length; i++) {
-            if (users[i]._id == id)
-            {
-                users[i].firstName=user.firstName;
-                users[i].lastName=user.lastName;
-                users[i].username=user.username;
-                users[i].password=user.password;
-                break;
-            }
-        }
-       return users[i];*/
-    }
-
 
 
     function Delete(id)
