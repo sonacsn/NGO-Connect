@@ -2,17 +2,30 @@
 <div class="col-sm-3 col-md-2 sidebar" ng-controller="SidebarController" >
    <!-- Volunteer -->
 
-            <ul class="nav nav-sidebar" ng-show="type=='Volunteer'">
-                <li  ng-class="{'active': $location.url().indexOf('home')!=-1}"><a href="#/home">Home </a></li>
-                <li  ng-class="{'active': $location.url().indexOf('profile')!=-1}"><a href="#/profile">Volunteer Profile</a></li>
-                <li  ng-class="{'active': $location.url().indexOf('projects')!=-1}"><a href="#/projects">Projects</a></li>
-                <li  ng-class="{'active': $location.url().indexOf('invites-requests')!=-1}">
+            <ul class="nav nav-sidebar">
+                <li  ng-class="{'active': $location.url().indexOf('home')!=-1 || $location.url() == ''}" ><a href="#/home">Home </a></li>
+
+                <!-- Volunteer -->
+                <li  ng-class="{'active': $location.url().indexOf('profile')!=-1}"
+                     ng-show="user!=null && type=='Volunteer'"><a href="#/profile">Volunteer Profile</a></li>
+
+                <!-- NGO-->
+                <li  ng-class="{'active': $location.url().indexOf('profile')!=-1}"
+                     ng-show="user!=null && type=='NGO'">
+                    <a href="#/profile">Profile NGO</a></li>
+
+                <li  ng-class="{'active': $location.url().indexOf('projects')!=-1}"
+                     ng-show="user!=null"><a href="#/projects">Projects</a></li>
+
+                <li  ng-class="{'active': $location.url().indexOf('invites-requests')!=-1}"
+                     ng-show="user!=null">
                     <a href="#/invites-requests">Invites/Requests</a></li>
                 <li  ng-class="{'active': ($location.url().indexOf('forms')!=-1)||
-                ($location.url().indexOf('fields')!=-1)}"><a href="#/forms">Forms</a></li>
+                ($location.url().indexOf('fields')!=-1)}" ng-show="user!=null"><a href="#/forms">Forms</a></li>
             </ul>
+
     <!-- NGO-->
-    <ul class="nav nav-sidebar" ng-hide="type=='Volunteer'">
+  <!--  <ul class="nav nav-sidebar" ng-hide="type=='Volunteer'">
         <li  ng-class="{'active': $location.url().indexOf('home')!=-1}"><a href="#/home">Home </a></li>
         <li  ng-class="{'active': $location.url().indexOf('profile')!=-1}"><a href="#/profile">Profile NGO</a></li>
         <li  ng-class="{'active': $location.url().indexOf('projects')!=-1}"><a href="#/projects">Projects</a></li>
@@ -21,6 +34,8 @@
         <li  ng-class="{'active': ($location.url().indexOf('forms')!=-1)||
                 ($location.url().indexOf('fields')!=-1)}"><a href="#/forms">Forms</a></li>
     </ul>
+    -->
+
         </div>
 </sidebar>
 

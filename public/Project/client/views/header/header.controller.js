@@ -11,7 +11,8 @@
                 .then(function (response) {
                    console.log("NOW LOGOUT SCENE IS" +response+ response.data)
 
-                    $rootScope.user = response;
+                    $rootScope.user = null;
+                    $rootScope.type = null;
                     $location.path("/home");
                 })
         }
