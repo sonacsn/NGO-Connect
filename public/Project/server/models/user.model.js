@@ -26,18 +26,106 @@ module.exports = function(pool) {
 
     return api;
 
-     function isValidPassword(oldpassword, newpassword){
-        return bcrypt.compareSync(newpassword,oldpassword);
-    };
-    // Generates hash using bCrypt
-    var createHash = function(password){
-        console.log("pass genrator")
-        return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
-    };
+
+
+
+    function FindById(userId,type) {
+        var deferred = q.defer();
+        console.log("userid in model findbyid:"+userId)
+
+        var mysql = require('mysql');
+        console.log (userId,type)
+        var sql = "SELECT * FROM ?? WHERE ?? = ? ";
+
+        var inserts = [type, 'id', userId];
+        console.log(" searcehd value:", inserts)
+
+        sql = mysql.format(sql, inserts);
+
+        if(type=="Volunteer"){
+
+            pool.query({
+                sql: sql,
+                timeout: 40000
+            }, function (error, results, fields) {
+                console.log('The solution is: ',results);
+
+                if(error!=null) {
+                    console.log("error connecting")
+                    deferred.reject(error);
+                }
+                else{
+                    console.log("length works",results)
+                    pool.query({
+                        sql: 'SELECT * FROM `Person` WHERE `id` = ?',
+                        timeout: 40000, // 40s
+                        values: [userId]
+                    }, function (error, results2, fields) {
+                        if(error!=null) {
+                            console.log("error connecting 2nd")
+                            deferred.reject(error);
+                        }
+                        else{
+
+                            console.log('The 2nd solution is: ',results2[0]);
+                            console.log(results[0],results2[0])
+                            var res=[results2[0],results[0]]
+                            console.log(res)
+                            deferred.resolve(res);
+                        }
+
+                    });
+
+
+                }
+            });
+
+
+        }
+
+        else{
+            pool.query({
+                sql: sql,
+                timeout: 40000
+            }, function (error, results, fields) {
+                console.log('The solution is: ',results);
+
+                if(error!=null) {
+                    console.log("error connecting")
+                    deferred.reject(error);
+                }
+                else{
+                    console.log("length works",results)
+
+                    deferred.resolve(results[0]);
+                }
+            });
+
+        }
+        return deferred.promise;
+
+
+        /*  UserModel.findById({
+         _id: userId
+         }, function(err, user) {
+
+         if(err) {
+         console.log("kuch na labya")
+         deferred.reject(err);
+         }
+         else{
+         console.log("labgaya")
+         deferred.resolve(user);
+         }
+         });*/
+
+    }
+
+
 
 
     function addUser(user) {
-       //console.log("reached here...");
+        //console.log("reached here...");
         var deferred = q.defer();
         var mysql = require('mysql');
 
@@ -46,63 +134,63 @@ module.exports = function(pool) {
 
         if(Array.isArray(user))
         {
-        pool.query({
-            sql: 'SELECT * FROM `Volunteer` WHERE `username` = ?',
-            timeout: 4000, // 40s
-            values: user[1].username
-        }, function (error, results, fields) {
+            pool.query({
+                sql: 'SELECT * FROM `Volunteer` WHERE `username` = ?',
+                timeout: 4000, // 40s
+                values: user[1].username
+            }, function (error, results, fields) {
 
-            if(error!=null) {
-                console.log("error connecting")
-                console.log("error connecting")
-                deferred.reject(error);
-            }
-            else if(results.length>0){
-                console.log('The solution is: ',results);
-                deferred.resolve(null);
-            }
-            else{
+                if(error!=null) {
+                    console.log("error connecting")
+                    console.log("error connecting")
+                    deferred.reject(error);
+                }
+                else if(results.length>0){
+                    console.log('The solution is: ',results);
+                    deferred.resolve(null);
+                }
+                else{
 
-                var query = pool.query('INSERT INTO Person SET ?', user[0], function(err, result) {
+                    var query = pool.query('INSERT INTO Person SET ?', user[0], function(err, result) {
 
-                    console.log('The insertion is: ',result);
-                    if (result!=undefined) {
-                        user[1].id=result.insertId;
-                        user[0].id=result.insertId;
-                        console.log(user[1])
-                        var query1 = pool.query('INSERT INTO Volunteer SET ?', user[1],
-                            function(err, result2) {
-
-
-                                if(err!=null) {
-                                    console.log("error connecting")
-                                    deferred.reject(error);
-                                }
-                                else{
-                                    console.log('The insertion  is: ',result2);
-                                    console.log('The returned value is: ',user);
-                                    deferred.resolve(user);
+                        console.log('The insertion is: ',result);
+                        if (result!=undefined) {
+                            user[1].id=result.insertId;
+                            user[0].id=result.insertId;
+                            console.log(user[1])
+                            var query1 = pool.query('INSERT INTO Volunteer SET ?', user[1],
+                                function(err, result2) {
 
 
-                                }
+                                    if(err!=null) {
+                                        console.log("error connecting")
+                                        deferred.reject(error);
+                                    }
+                                    else{
+                                        console.log('The insertion  is: ',result2);
+                                        console.log('The returned value is: ',user);
+                                        deferred.resolve(user);
 
-                            });
-                    }
 
-                    if(err!=null) {
-                        console.log("error connecting")
-                        deferred.reject(error);
-                    }
+                                    }
 
-                });
+                                });
+                        }
 
-            }
-        });
+                        if(err!=null) {
+                            console.log("error connecting")
+                            deferred.reject(error);
+                        }
+
+                    });
+
+                }
+            });
 
         }
 
         else{
-           console.log("NGO checking")
+            console.log("NGO checking")
             pool.query({
                 sql: 'SELECT * FROM `NGO` WHERE `username` = ?',
                 timeout: 4000, // 40s
@@ -143,9 +231,9 @@ module.exports = function(pool) {
         }
 
 
-         return deferred.promise;
+        return deferred.promise;
 
-            //console.log(result.insertId);
+        //console.log(result.insertId);
     }
 
 
@@ -153,78 +241,108 @@ module.exports = function(pool) {
     function findUserByCredentials(username,password,type) {
         var deferred = q.defer();
         var mysql = require('mysql');
-       console.log (username,password,type)
+        console.log (username,password,type)
         var sql = "SELECT * FROM ?? WHERE ?? = ? AND ?? =?";
 
-            var inserts = [type, 'username', username,'password',password];
-            console.log("IN Volunteer", inserts)
+        var inserts = [type, 'username', username,'password',password];
+        console.log("IN Volunteer", inserts)
 
         sql = mysql.format(sql, inserts);
 
 
-            if(type=="Volunteer"){
+        if(type=="Volunteer"){
 
-                pool.query({
-                    sql: sql,
-                    timeout: 40000
-                }, function (error, results, fields) {
-                    console.log('The solution is: ',results);
+            pool.query({
+                sql: sql,
+                timeout: 40000
+            }, function (error, results, fields) {
+                console.log('The solution is: ',results);
 
-                    if(error!=null) {
-                        console.log("error connecting")
-                        deferred.reject(error);
-                    }
-                    else{
-                        console.log("length works",results)
-                        pool.query({
-                            sql: 'SELECT * FROM `Person` WHERE `id` = ?',
-                            timeout: 40000, // 40s
-                            values: [results[0].id]
-                        }, function (error, results2, fields) {
-                            if(error!=null) {
-                                console.log("error connecting 2nd")
-                                deferred.reject(error);
-                            }
-                            else{
+                if(error!=null) {
+                    console.log("error connecting")
+                    deferred.reject(error);
+                }
+                else{
+                    console.log("length works",results)
+                    pool.query({
+                        sql: 'SELECT * FROM `Person` WHERE `id` = ?',
+                        timeout: 40000, // 40s
+                        values: [results[0].id]
+                    }, function (error, results2, fields) {
+                        if(error!=null) {
+                            console.log("error connecting 2nd")
+                            deferred.reject(error);
+                        }
+                        else{
 
-                                console.log('The 2nd solution is: ',results2[0]);
-                               console.log(results[0],results2[0])
-                               var res=[results2[0],results[0]]
-                                console.log(res)
-                                deferred.resolve(res);
-                            }
+                            console.log('The 2nd solution is: ',results2[0]);
+                            console.log(results[0],results2[0])
+                            var res=[results2[0],results[0]]
+                            console.log(res)
+                            deferred.resolve(res);
+                        }
 
-                        });
-
-
-                    }
-                });
+                    });
 
 
-            }
+                }
+            });
 
-            else{
-        pool.query({
-            sql: sql,
-            timeout: 40000
-        }, function (error, results, fields) {
-            console.log('The solution is: ',results);
 
-            if(error!=null) {
-                console.log("error connecting")
-                deferred.reject(error);
-            }
-            else{
-                console.log("length works",results)
+        }
 
-                deferred.resolve(results[0]);
-            }
-        });
+        else{
+            pool.query({
+                sql: sql,
+                timeout: 40000
+            }, function (error, results, fields) {
+                console.log('The solution is: ',results);
 
-            }
+                if(error!=null) {
+                    console.log("error connecting")
+                    deferred.reject(error);
+                }
+                else{
+                    console.log("length works",results)
+
+                    deferred.resolve(results[0]);
+                }
+            });
+
+        }
         return deferred.promise;
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ //-------------------------------   old code ------------------------------------
+
+     function isValidPassword(oldpassword, newpassword){
+        return bcrypt.compareSync(newpassword,oldpassword);
+    };
+    // Generates hash using bCrypt
+    var createHash = function(password){
+        console.log("pass genrator")
+        return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+    };
+
+
 
 
     function Create(user) {
@@ -311,27 +429,6 @@ module.exports = function(pool) {
 
     }
 
-
-    function FindById(userId) {
-        var deferred = q.defer();
-        console.log("userid in model findbyid:"+userId)
-        UserModel.findById({
-            _id: userId
-        }, function(err, user) {
-
-            if(err) {
-                console.log("kuch na labya")
-                deferred.reject(err);
-            }
-            else{
-                console.log("labgaya")
-                deferred.resolve(user);
-            }
-        });
-
-        return deferred.promise;
-
-    }
 
     function findUserByUsername(username,password) {
         var deferred = q.defer();

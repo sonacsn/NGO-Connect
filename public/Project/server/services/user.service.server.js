@@ -62,11 +62,18 @@ module.exports = function(app, model) {
     }
 
     function deserializeUser(user, done) {
-
-        console.log("in deserialize",user)
-        done(null, user);
-
-        /* user_model.FindById(user._id)
+        var type,id
+        if(Array.isArray(user)){
+            id=user[1].id
+            type="Volunteer"
+        }
+        else{
+            id=user.id
+            type="NGO"
+        }
+            console.log("in deserialize",id,type)
+        //done(null, user);
+         user_model.FindById(id,type)
          .then(
          function(user){
          done(null, user);
@@ -74,7 +81,7 @@ module.exports = function(app, model) {
          function(err){
          done(err, null);
          }
-         );*/
+         );
 
     }
     function authorized (req, res, next) {
