@@ -40,7 +40,7 @@
 
         $scope.editProject = editProject
         $scope.updateProject = updateProject
-        $scope.deleteForm = deleteForm
+        $scope.deleteProject = deleteProject
         $scope.addProject = addProject
 
         function editProject(project,type)
@@ -81,12 +81,18 @@
                 })*/
 
         }
-        function deleteForm(form)
+        function deleteProject(project)
         {
-            FormService.deleteFormById(form)
-                .then(function(newforms)
+            console.log(project.id)
+            FormService.deleteProjectById(project.id)
+                .then(function(status)
             {
-                $scope.forms=newforms
+                console.log(status)
+
+                if(status=="OK")
+                  init();
+                else
+                    alert("Problem with Deleting the Project")
              });
 
         }

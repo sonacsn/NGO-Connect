@@ -17,6 +17,7 @@ module.exports = function(pool) {
         findAllProjects:findAllProjects,
         addUser: addUser,
         FindById: FindById,
+        deleteProjectById:deleteProjectById,
         //--------- to be Modified ---------------
        Delete: Delete,
        Update: Update,
@@ -27,6 +28,43 @@ module.exports = function(pool) {
     };
 
     return api;
+
+
+    function deleteProjectById(projectId)
+    {
+
+        var deferred = q.defer();
+        console.log("userid in findAllProjects model :  ",projectId)
+        var mysql = require('mysql');
+
+        /*var sql = "SELECT * FROM ?? WHERE ?? = ? ";
+         var inserts = [type, 'id', userId];
+         console.log(" searcehd value:", inserts)
+         sql = mysql.format(sql, inserts);*/
+
+       // if(type=="NGO")
+        {
+
+            pool.query({
+                sql: "DELETE FROM Project WHERE id = ? ",
+                timeout: 4000 ,    //4 secs
+                values: [projectId]
+            }, function (error, results, fields) {
+                if(error!=null) {
+                    console.log("error connecting")
+                    deferred.reject(error);
+                }
+                else{
+                    console.log('The solution is: ',results);
+                    console.log("length works",results.length)
+                    deferred.resolve(results);
+                }
+            });
+        }
+
+        return deferred.promise;
+
+    }
 
 function findAllProjects(userId,type){
 

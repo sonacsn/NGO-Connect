@@ -10,7 +10,7 @@ module.exports = function(app, model) {
     var auth = authorized;
     /*-------------------------- NEW REQUESTS NEW CODE -------------------------*/
     app.get   ('/api/project/user/projects/:id/type/:type',     auth ,findAllProjects)
-
+    app.put('/api/project/NgoProject/:id',deleteProjectById)
     //-----------------------------  login/register NEW CODE -------------------------
 
     app.post  ('/api/project/login', passport.authenticate('assignment'), login);
@@ -34,7 +34,24 @@ module.exports = function(app, model) {
 //--------------------------------------------------------
 
 
+    function deleteProjectById(req, res) {
 
+        var projectId = req.params.id;
+        console.log("In deleteProjectById service")
+        console.log(projectId)
+        //res.sendStatus(200);
+
+        user_model.deleteProjectById(projectId)
+            .then(function (status) {
+                    console.log("In deleteProjectById service result")
+                    console.log(status)
+                    res.sendStatus(200)
+                }, function (error) {
+                    console.log("in deleteProjectById reject value")
+                    res.sendStatus(400)
+                }
+            );
+    }
     function findAllProjects(req, res)
     {
 

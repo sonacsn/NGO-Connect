@@ -5,6 +5,8 @@
     function FormService($http,$q,$rootScope){
         var service={
             findAllProjects:findAllProjects,
+            deleteProjectById:deleteProjectById,
+            //To be Modified.....
             createFormForUser:createFormForUser,
             deleteFormById:deleteFormById,
             updateFormById:updateFormById
@@ -18,6 +20,19 @@
             var deferred = $q.defer();
 
             $http.get("/api/project/user/projects/" + userId + "/type/"+type).success(function(response) {
+                deferred.resolve(response);
+            });
+            console.log(deferred.promise)
+            return deferred.promise;
+        }
+
+        function deleteProjectById(id)
+        {
+
+            console.log(id)
+            var deferred = $q.defer();
+
+            $http.put("/api/project/NgoProject/" +id).success(function(response) {
                 deferred.resolve(response);
             });
             console.log(deferred.promise)
