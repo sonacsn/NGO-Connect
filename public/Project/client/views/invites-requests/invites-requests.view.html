@@ -5,6 +5,166 @@
     <h2 ng-hide="user">Please <a href="#/login">Login</a>/<a href="#/register">Register</a> to view Forms</h2>-->
     <div ng-show="user">
         <br>
+    <!----------------------------------  VOLUNTEER  ---------------------------------------->
+        <!--------------- NGO---------------------------------------->
+        <div ng-show="type=='Volunteer'">
+            <ul class="nav nav-tabs">
+                <li role="presentation"  ng-class="{active: selected == 1 }" ng-click="selected=1">
+                    <a href="">Pending Invites</a></li>
+                <li role="presentation"  ng-class="{active: selected == 2 }" ng-click="vm.inviteVolunteers(user)">
+                    <a href="">Send Join Requests</a></li>
+                <li role="presentation"  ng-class="{active: selected == 3 }" ng-click="vm.getAllInvitations(user)">
+                    <a href="">Requests Replies</a></li>
+            </ul>
+            <div ng-show="selected == 1">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th><span class="caret"></span>Project Name</th>
+                            <th><span class="caret"></span>NGO Name</th>
+                            <th><span class="caret"></span> Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr  ng-repeat-start="volunteer in volunteers" ng-class="{'selected':$index == selectedRow}">
+                            <td>
+                                {{volunteer.name}}
+                            </td>
+                            <td>
+                                {{volunteer. NGO_name}}
+                            </td>
+                            <td class="text-nowrap">
+                                <a class="btn btn-info btn-sm" ng-click="volunteer.expanded = !volunteer.expanded">
+                                    Details</a>
+                                <a class="btn btn-danger btn-md"ng-click="vm.declineRequest(volunteer)" role="button">
+                                    <span class="glyphicon glyphicon-remove"></span></a>
+                                <a class="btn btn-success btn-md"ng-click="vm.acceptRequest(volunteer)" role="button">
+                                    <span class="glyphicon glyphicon-ok"></span></a>
+
+                            </td>
+                        </tr>
+                        <tr ng-if="volunteer.expanded" ng-repeat-end="">
+                            <td colspan="3">
+                                <div>
+                                    <dl>
+                                        <dt> Project Location</dt>
+                                        <dd>{{volunteer.location }}</dd>
+                                    </dl>
+
+
+                                    <dl>
+                                        <dt> Project Description </dt>
+                                        <dd>{{volunteer.description }}</dd>
+                                    </dl>
+
+                                    <dl>
+                                        <dt> Project Duration (Months) </dt>
+                                        <dd>{{volunteer.duration_months }}</dd>
+                                    </dl>
+
+                                    <dl>
+                                        <dt> start Date </dt>
+                                        <dd>{{volunteer.startDate }}</dd>
+                                    </dl>
+
+
+                                    <dl>
+                                        <dt> NGO Cause Description </dt>
+                                        <dd>{{volunteer.causeDescription}}</dd>
+                                    </dl>
+
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!--SECTION2-->
+
+            <div ng-show="selected == 2">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th><span class="caret"></span> Volunteer Name</th>
+                            <th><span class="caret"></span> Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat-start="vol in allVolunteers" ng-class="{'selected':$index == selectedRow}">
+                            <td ng-click="project.expanded = !project.expanded">
+                                {{vol.firstName}} {{vol.lastName}}
+                            </td>
+                            <td class="text-nowrap">
+                                <a class="btn btn-primary btn-sm" ng-click="project.expanded = !project.expanded">
+                                    Details</a>
+                                <a class="btn btn-info btn-md"  role="button"
+                                   data-toggle="modal" data-target="#invite" ng-click="vm.getProbProjects(vol)">
+                                    Invite</a>
+                            </td>
+                        </tr>
+                        <tr ng-if="project.expanded" ng-repeat-end="">
+                            <td colspan="2">
+                                <div>
+                                    {{vol}}
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!--------------------------------------SECTION 3------------------------------------>
+            <div ng-show="selected == 3">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th><span class="caret"></span> Volunteer Name</th>
+                            <th><span class="caret"></span> Project Name</th>
+                            <th><span class="caret"></span> Status </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="invitation in vm.invitations"
+                            ng-class="{'selected':$index == selectedRow,
+                        success: invitation.status == 'approved',
+                        danger: invitation.status == 'declined',
+                        warning: invitation.status == 'pending'}">
+                            <td >
+                                {{invitation.firstName}} {{invitations.lastName}}
+                            </td>
+                            <td >
+                                {{invitation.name}}
+                            </td>
+                            <td >
+                                {{invitation.status}}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+        <!-------------------- END VOLUNTEER--------------------------------------------->
 
         <!--------------- NGO---------------------------------------->
         <div ng-show="type=='NGO'">

@@ -8,6 +8,11 @@ module.exports = function(app,pool) {
 
 
 
+
+
+
+
+
     /*pool.query({
         sql: "SELECT pr.*,ngo.name as NGO_name,ngo.type,ngo.memberSize,ngo.causeDescription FROM Participation as pa,Project as pr,NGO  " +
         "WHERE participatedBy = ? AND pa.participatesIn=pr.id AND NGO.id=pr.ngo",

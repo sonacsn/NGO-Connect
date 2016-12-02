@@ -163,43 +163,89 @@ module.exports = function(pool) {
         var deferred = q.defer();
         var mysql = require('mysql');
 
+        if(volunteer.volunteerCount=== undefined)
+        {
 
-        //var status = 'approved';
-        //console.log("App req in model",volunteer.id,volunteer.personId,volunteer.projectId,status)
-        var query = pool.query('Update Request SET status = ? WHERE requestedBy = ? and requestTo =  ? and requestedFor = ? ',
-            [volunteer.status,volunteer.personId,volunteer.id,volunteer.projectId],function(err,res){
-                console.log(query)
-                if(err!=null) {
-                    console.log("error connecting")
-                    console.log(query)
-                    console.log(err)
-                    deferred.reject(err);
-                }
-                else {
-                    console.log('The solution is: ', res);
-                    if(volunteer.status=='approved'){
-                        var participation = { participatesIn:volunteer.projectId,
-                            participatedBy:volunteer.personId };
-                        pool.query({
-                            sql:  'INSERT INTO Participation SET ?',
-                            timeout: 4000 ,    //4 secs
-                            values: [participation]
-                        }, function (error, results, fields) {
-                            if(error!=null) {
-                                console.log("error connecting")
-                                console.log(error)
-                                deferred.reject(error);
-                            }
-                            else{
-                                console.log('The solution is: ',results);
-                                console.log("length works",results.length)
-                                deferred.resolve(results);
-                            }
-                        });
+            var query = pool.query('Update Request SET status = ? WHERE requestedBy = ? and requestTo =  ? and requestedFor = ? ',
+                [volunteer.status,volunteer.personId,volunteer.id,volunteer.projectId],function(err,res){
+
+                    if(err!=null) {
+                        console.log("error connecting")
+                        console.log(err)
+                        deferred.reject(err);
                     }
-                    deferred.resolve(res)
-                }
-            });
+                    else {
+                        console.log('The solution is: ', res);
+                        if(volunteer.status=='approved'){
+
+                            var participation = { participatesIn:volunteer.projectId,
+                                participatedBy:volunteer.personId };
+                            console.log("VVVVVVVV",participation)
+                            pool.query({
+                                sql:  'INSERT INTO Participation SET ?',
+                                timeout: 4000 ,    //4 secs
+                                values: [participation]
+                            }, function (error, results, fields) {
+                                if(error!=null) {
+                                    console.log(" error VVVVVVVV",participation)
+                                    console.log(error)
+                                    deferred.reject(error);
+                                }
+                                else{
+                                    console.log(" solution VVVVVVVV",results)
+                                    deferred.resolve(results);
+                                }
+                            });
+                        }
+                        deferred.resolve(res)
+                    }
+                });
+
+
+
+        }
+
+
+        else{
+            console.log("VVVVVVVVVVVVVVVV",volunteer.id)
+            //var status = 'approved';
+            //console.log("App req in model",volunteer.id,volunteer.personId,volunteer.projectId,status)
+            var query = pool.query('Update Invitation SET status = ? WHERE invitedBy = ? and invitedTo =  ? and invitedFor = ? ',
+                [volunteer.status,volunteer.ngo,volunteer.personId,volunteer.id],function(err,res){
+                    console.log(query)
+                    if(err!=null) {
+                        console.log("error connecting")
+                        console.log(query)
+                        console.log(err)
+                        deferred.reject(err);
+                    }
+                    else {
+                        console.log('The solution is: ', res);
+                        if(volunteer.status=='approved'){
+                            var participation = { participatesIn:volunteer.id,
+                                participatedBy:volunteer.personId };
+                            pool.query({
+                                sql:  'INSERT INTO Participation SET ?',
+                                timeout: 4000 ,    //4 secs
+                                values: [participation]
+                            }, function (error, results, fields) {
+                                if(error!=null) {
+                                    console.log("error connecting")
+                                    console.log(error)
+                                    deferred.reject(error);
+                                }
+                                else{
+                                    console.log('The solution is: ',results);
+                                    console.log("length works",results.length)
+                                    deferred.resolve(results);
+                                }
+                            });
+                        }
+                        deferred.resolve(res)
+                    }
+                });
+        }
+
         return deferred.promise;
     }
 
@@ -211,7 +257,28 @@ module.exports = function(pool) {
         console.log(user)
 
         if(Array.isArray(user)){
-            deferred.reject(0);
+
+            console.log(user)
+            // var status = 'Pending'
+            var query = pool.query('select pr.*,NGO.name as NGO_name,NGO.type ' +
+                ',NGO.memberSize,NGO.causeDescription,inv.invitedTo as personId ' +
+                'from Project as pr,Invitation as inv,NGO ' +
+                'where inv.invitedBy=NGO.id ' +
+                'AND pr.id=inv.invitedFor ' +
+                'AND inv.invitedTo = ? ' +
+                'AND NGO.id=pr.ngo ' +
+                'AND inv.status=? ',[user[1].id,'pending'],function(err,res){
+                if(err!=null) {
+                    console.log("error connecting")
+                    console.log(err)
+                    deferred.reject(err);
+                }
+                else {
+                    console.log('The solution is: ', res);
+                    deferred.resolve(res)
+                }
+            });
+
         }
         else{
             console.log(user)
