@@ -14,8 +14,15 @@ module.exports = function(app, model) {
     app.put('/api/project/NgoProject/:id',     auth ,deleteProjectById)
     app.post("/api/project/NgoProject/",     auth ,createProject)
     app.put("/api/project/NgoProject/",     auth ,updateProject)
-
     app.put("/api/project/Volunteer/:userId/Project/:projectId", auth ,deleteVolunteerProjectById )
+    //------------ Sona-------------
+    app.post("/api/project/user",auth , getVolunteers)
+    app.put("/api/project/NGO/request",auth, changeRequestStatus)
+    app.post("/api/project/NGO/invite",auth,inviteVolunteers)
+    app.post("/api/project/NGO/probProjects",auth,getProbProjects)
+    app.put("/api/project/NGO/sendInvite",auth,sendInvite)
+    app.post("/api/project/NGO/getAllInvitations",auth,getAllInvitations)
+
     //-----------------------------  login/register NEW CODE -------------------------
 
     app.post  ('/api/project/login', passport.authenticate('assignment'), login);
@@ -37,9 +44,123 @@ module.exports = function(app, model) {
     app.put   ('/api/assignment/admin/user/:id', auth, updateUserByAdmin);
     app.delete('/api/assignment/admin/user/:id', auth, deleteUserById);*/
 //--------------------------------------------------------
+//--------------- SONA ---------------------------------------------------------
 
 
+    function getAllInvitations(req,res) {
 
+        var user= req.body;
+        console.log("In getAllInvitations service")
+        console.log(user)
+        //res.sendStatus(200);
+
+        user_model.getAllInvitations(user)
+            .then(function (invitations) {
+                    console.log("In getAllInvitations service result")
+                    console.log(invitations)
+                    res.json(invitations)
+                }, function (error) {
+                    console.log("in getAllInvitations reject value")
+                    res.json(error)
+                }
+            );
+    }
+
+    function sendInvite(req,res) {
+
+        var vol= req.body;
+        console.log("In getProbProjects service")
+        console.log(vol)
+        //res.sendStatus(200);
+
+        user_model.sendInvite(vol)
+            .then(function (projects) {
+                    console.log("In sendInvite service result")
+                    console.log(projects)
+                    res.sendStatus(200)
+                }, function (error) {
+                    console.log("in sendInvite reject value")
+                    res.json(error)
+                }
+            );
+
+    }
+
+    function getProbProjects(req,res) {
+
+        var vol= req.body;
+        console.log("In getProbProjects service")
+        console.log(vol)
+        //res.sendStatus(200);
+
+        user_model.getProbProjects(vol)
+            .then(function (projects) {
+                    console.log("In getProbProjects service result")
+                    console.log(projects)
+                    res.json(projects)
+                }, function (error) {
+                    console.log("in getProbProjects reject value")
+                    res.json(error)
+                }
+            );
+    }
+
+    function inviteVolunteers(req,res) {
+
+        var user= req.body;
+        console.log("In inviteVolunteers service")
+        console.log(user)
+        //res.sendStatus(200);
+
+        user_model.inviteVolunteers(user)
+            .then(function (vol) {
+                    console.log("In inviteVolunteers service result")
+                    console.log(vol)
+                    res.json(vol)
+                }, function (error) {
+                    console.log("in inviteVolunteers reject value")
+                    res.json(error)
+                }
+            );
+    }
+
+    function changeRequestStatus(volunteer,res){
+
+        console.log("In get accept request Server.js")
+        console.log(volunteer.body)
+
+        user_model.changeRequestStatus(volunteer.body)
+            .then(function (volunteer) {
+                    console.log("In accept request service result")
+                    console.log(volunteer)
+                    res.sendStatus(200)
+                },function(error){
+                    console.log("in accept request reject value")
+                    res.json(error);
+                }
+            );
+
+    }
+
+    function getVolunteers(user,res) {
+        console.log("In get Volunteers Server.js")
+        console.log(user.body)
+
+        user_model.getVolunteers(user.body)
+            .then(function (volunteers) {
+                    console.log("In volunteers service result")
+                    console.log(volunteers)
+                    res.json(volunteers)
+                },function(error){
+                    console.log("in volunteers reject value")
+                    res.json(error);
+                }
+            );
+
+    }
+
+
+//----------- SONA ---------------------------------------
     function deleteVolunteerProjectById(req, res){
 
         var userId = req.params.userId;

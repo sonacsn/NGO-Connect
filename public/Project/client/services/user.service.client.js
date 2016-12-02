@@ -16,12 +16,98 @@
             deleteUserById:deleteUserById,
             updateUserByAdmin:updateUserByAdmin,
             updateUser:updateUser,
-            logout:logout
+            logout:logout,
+            getVolunteers:getVolunteers,
+            changeRequestStatus: changeRequestStatus,
+            inviteVolunteers:inviteVolunteers,
+            getProbProjects:getProbProjects,
+            sendInvite:sendInvite,
+            getAllInvitations:getAllInvitations
 
         };
         return service;
+        //----------------------------------------------------------------------
+        function getAllInvitations(user) {
+            console.log("sendInvite Client server")
+            var deferred = $q.defer();
+
+            $http.post("/api/project/NGO/getAllInvitations",user).success(function (response) {
+                deferred.resolve(response);
+
+            });
+            console.log(deferred.promise)
+            return deferred.promise;
+        }
+
+        function sendInvite(project,volId,ngoId) {
+            console.log("sendInvite Client server",project,volId,ngoId)
+            var deferred = $q.defer();
+
+            var invitation = {projectId:project.id,id:volId,ngoId:ngoId}
+            $http.put("/api/project/NGO/sendInvite",invitation).success(function (response) {
+                deferred.resolve(response);
+
+            });
+            console.log(deferred.promise)
+            return deferred.promise;
+        }
+
+        function getProbProjects(id,vol) {
+
+            console.log("getProbProjects Client server")
+            var deferred = $q.defer();
+
+            vol.ngoId = id
+
+            $http.post("/api/project/NGO/probProjects",vol).success(function (response) {
+                deferred.resolve(response);
+
+            });
+            console.log(deferred.promise)
+            return deferred.promise;
+        }
+
+        function inviteVolunteers(user) {
+
+            console.log(user.name)
+            var deferred = $q.defer();
+
+            $http.post("/api/project/NGO/invite",user).success(function (response) {
+                deferred.resolve(response);
+
+            });
+            console.log(deferred.promise)
+            return deferred.promise;
+        }
+
+        function changeRequestStatus(volunteer,status){
+
+            var deferred = $q.defer();
+            volunteer.status = status;
+            //console.log(volunteer)
+            $http.put("/api/project/NGO/request",volunteer).success(function (response) {
+                deferred.resolve(response);
+
+            });
+            console.log(deferred.promise)
+            return deferred.promise;
+        }
+
+        function getVolunteers(user){
+
+            console.log(user.name)
+            var deferred = $q.defer();
+
+            $http.post("/api/project/user",user).success(function (response) {
+                deferred.resolve(response);
+
+            });
+            console.log(deferred.promise)
+            return deferred.promise;
+        }
 
 
+//---------------------------------------------------
         function updateUser(user,id)
         {
 

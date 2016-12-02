@@ -4,28 +4,93 @@
 
     function invreqController($scope,$rootScope, $routeParams,$location,UserService,FormService) {
         var vm = this;
+        vm.acceptRequest = approveRequest;
+        vm.declineRequest = declineRequest;
+        vm.inviteVolunteers = inviteVolunteers;
+        vm.sendInvite=sendInvite;
+        vm.getProbProjects=getProbProjects;
+        vm.getAllInvitations = getAllInvitations;
+
+        function getAllInvitations(user) {
+            console.log(user);
+            $scope.selected=3;
+
+            UserService.getAllInvitations(user)
+                .then(function (invitations) {
+                    console.log("Priniting all getAllInvitations...")
+                    console.log(invitations)
+                    vm.invitations = invitations
+                });
+        }
+
+        function getProbProjects (vol){
+            console.log(vol)
+            // $scope.selected=1;
+            $scope.selectedUserId=vol.id
+            console.log($scope.selectedUserId)
+            UserService.getProbProjects($rootScope.user.id,vol)
+                .then(function (Projects) {
+                    console.log("Priniting all Projects...")
+                    console.log(Projects)
+                    vm.userProjects = Projects
+                });
+        }
+
+        function sendInvite(Project){
+
+            console.log("send Invite controller.js")
+
+            UserService.sendInvite(Project,$scope.selectedUserId,$rootScope.user.id)
+                .then(function(status)
+                {
+                    console.log(status)
+
+                    if(status=="OK") {
+                        alert("The Volunteer has been invited")
+                        inviteVolunteers($rootScope.user);
+                    }
+                    else
+                        alert("Problem with inviting")
+                });
+        }
+
+
         function init(){
-                $scope.selected=1;
-console.log("init")
-            $scope.volunteers=[
+
+           // vm.userProjects=[{name:"A"},{name:"B"},{name:"C"},{name:"D"}]
+
+
+            $scope.selected=1;
+            console.log("init")
+
+            if($rootScope.user) {
+                UserService.getVolunteers($rootScope.user)
+                    .then(function (volunteers) {
+                        console.log(volunteers)
+                        $scope.volunteers = volunteers
+                    });
+            }
+
+
+          /*  $scope.volunteers=[
                 {id: 1,
                     name:'Mine Ban Treaty',
                     status:'approved',
                     location:'Wyoming',
                     description:'aims at eliminating anti-personnel landmines (AP-mines) around the world',
                     duration_months:15 ,
-                startDate:'2016-11-30 05:00:00',
-                volunteerCount:100 ,
-                ngo:1} ,
+                    startDate:'2016-11-30 05:00:00',
+                    volunteerCount:100 ,
+                    ngo:1} ,
 
-            {id: 1,name:'Mine Ban Treaty',
-                status:'declined',
-                location:'Wyoming',
-                description:'aims at eliminating anti-personnel landmines (AP-mines) around the world',
-                duration_months:15 ,
-                startDate:'2016-11-30 05:00:00',
-                volunteerCount:100 ,
-                ngo:1},
+                {id: 1,name:'Mine Ban Treaty',
+                    status:'declined',
+                    location:'Wyoming',
+                    description:'aims at eliminating anti-personnel landmines (AP-mines) around the world',
+                    duration_months:15 ,
+                    startDate:'2016-11-30 05:00:00',
+                    volunteerCount:100 ,
+                    ngo:1},
 
                 {id: 1,name:'Mine Ban Treaty',
                     status:'pending',
@@ -36,22 +101,56 @@ console.log("init")
                     volunteerCount:100 ,
                     ngo:1}
 
-        ]
+            ]
             $scope.projects= $scope.volunteers;
 
-            /* if($rootScope.user)
+            /!* if($rootScope.user)
              {
              FormService.findAllFormsForUser($rootScope.user).then(function(forms)
              {
              $scope.forms=forms
              console.log($scope.forms)
              });
-             }*/
+             }*!/*/
         }
 
 
 
         init();
+
+        function approveRequest(volunteer){
+
+                console.log("In approve req controller.js");
+                console.log(volunteer)
+                UserService.changeRequestStatus(volunteer,'approved')
+                    .then(function(status)
+                    {
+                        console.log(status)
+
+                        if(status=="OK") {
+                            alert("The Request has been approved")
+                            init();
+                        }
+                        else
+                            alert("Problem with approving request")
+                    });
+        }
+
+        function declineRequest(volunteer) {
+
+            UserService.changeRequestStatus(volunteer,'declined')
+                .then(function(status)
+                {
+                    console.log(status)
+
+                    if(status=="OK") {
+                        alert("The Request has been denied")
+                        init();
+                    }
+                    else
+                        alert("Problem with declining request")
+                });
+        }
 
 
         $scope.editProject = editProject
@@ -64,42 +163,59 @@ console.log("init")
             vm.newproject=project
             $scope.selection=type;
 
+
+
+
             if(type=='edit')
                 vm.newproject.startDate=sqlToJsDate(vm.newproject.startDate)
 
 
             console.log(vm.newproject,type)
 
-           /* $scope.selectformindex = index;
-            $scope.form = {
-                _id: $scope.forms[index]._id,
-                title: $scope.forms[index].title,
-                userId: $scope.forms[index].userId
+            /* $scope.selectformindex = index;
+             $scope.form = {
+             _id: $scope.forms[index]._id,
+             title: $scope.forms[index].title,
+             userId: $scope.forms[index].userId
 
-            }*/
+             }*/
+
+        }
+
+        function inviteVolunteers(user){
+
+            console.log("in Invite volunteer controller")
+            //console.log(user)
+            $scope.selected=2;
+
+                UserService.inviteVolunteers(user)
+                    .then(function (volunteers) {
+                        console.log(volunteers)
+                        $scope.allVolunteers = volunteers
+                    });
 
         }
 
         function updateProject(project)
         {
             console.log(project)
-           /*FormService.updateFormById(form._id,form)
-               .then(function(Newform)
-                {
-                    console.log(Newform)
-                    $scope.forms[$scope.selectformindex]=Newform
-                    $scope.selectformindex=-1;
+            /*FormService.updateFormById(form._id,form)
+             .then(function(Newform)
+             {
+             console.log(Newform)
+             $scope.forms[$scope.selectformindex]=Newform
+             $scope.selectformindex=-1;
 
-                })*/
+             })*/
 
         }
         function deleteForm(form)
         {
             FormService.deleteFormById(form)
                 .then(function(newforms)
-            {
-                $scope.forms=newforms
-             });
+                {
+                    $scope.forms=newforms
+                });
 
         }
         function addProject(project)
@@ -110,10 +226,10 @@ console.log("init")
 
             console.log(project.startDate)
             /*FormService.createFormForUser($rootScope.user._id,title)
-                .then(function(forms)
-            {
-            $scope.forms=forms
-            });*/
+             .then(function(forms)
+             {
+             $scope.forms=forms
+             });*/
 
 
         }
@@ -148,7 +264,7 @@ console.log("init")
             var sqlDateArr4 = sqlDateArr3[2].split(".");
             //format of sqlDateArr4[] = ['ss','ms']
             var sSecond = sqlDateArr4[0];
-           var date= new Date(sYear,sMonth,sDay,sHour,sMinute,sSecond);
+            var date= new Date(sYear,sMonth,sDay,sHour,sMinute,sSecond);
 
             return date;
         }

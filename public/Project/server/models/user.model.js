@@ -22,6 +22,13 @@ module.exports = function(pool) {
         updateProject:updateProject,
        Update: Update,
         deleteVolunteerProjectById:deleteVolunteerProjectById,
+        //--------------------------------------
+        getVolunteers:getVolunteers,
+        changeRequestStatus:changeRequestStatus,
+        inviteVolunteers:inviteVolunteers,
+        getProbProjects:getProbProjects,
+        sendInvite:sendInvite,
+        getAllInvitations:getAllInvitations,
         //--------- to be Modified ---------------
        Delete: Delete,
        findUserByUsername: findUserByUsername,
@@ -31,7 +38,209 @@ module.exports = function(pool) {
     };
 
     return api;
+    //----------------------------
 
+    function getAllInvitations(user) {
+
+
+        console.log("In sendInvite model.js");
+
+        var deferred = q.defer();
+        var mysql = require('mysql');
+
+        if(Array.isArray(user)){
+
+        }
+        else{
+            var q2 = pool.query('Select i.status, p.firstName,p.lastName,pr.name,pr.id as projectId,p.id as personId from Invitation i,Person p,Project pr '+
+                'where i.invitedTo = p.id and i.invitedFor = pr.id and i.invitedBy =? '
+                ,[user.id],
+                function (err, res) {
+
+                    if (err != null) {
+                        console.log("error connecting")
+                        console.log(q2)
+                        console.log(err)
+                        deferred.reject(err);
+                    }
+                    else {
+                        console.log('The solution is: ', res);
+                        deferred.resolve(res)
+                    }
+                });
+        }
+        return deferred.promise;
+    }
+
+    function sendInvite(vol) {
+
+        console.log("In sendInvite model.js");
+
+        var deferred = q.defer();
+        var mysql = require('mysql');
+        var status = 'pending';
+        console.log(vol.ngoId,vol.id,vol.projectId,status)
+        var q2 = pool.query('INSERT INTO Invitation VALUES (?,?,?,?)',[vol.ngoId,vol.id,vol.projectId,status],
+            function (err, res) {
+
+                if (err != null) {
+                    console.log("error connecting")
+                    console.log(err)
+                    deferred.reject(err);
+                }
+                else {
+                    console.log('The solution is: ', res);
+                    deferred.resolve(res)
+                }
+            });
+        return deferred.promise;
+    }
+
+    function getProbProjects(vol) {
+
+        console.log("In getProbProjects model.js");
+
+        var deferred = q.defer();
+        var mysql = require('mysql');
+
+        var q2 = pool.query('select * from Project pr'+
+            ' where not exists'+
+            ' (select * from Invitation where pr.id= invitedFor and '+
+            ' invitedTo=? and status in (\'pending\',\'approved\'))'+
+            ' and not exists'+
+            ' (select * from Request where pr.id = requestedFor and '+
+            ' requestedBy = ? and status in (\'pending\',\'approved\'))' +
+            ' and ngo = ?',[vol.id,vol.id,vol.ngoId], function (err, res) {
+
+            if (err != null) {
+                console.log("error connecting")
+                console.log(query)
+                console.log(err)
+                deferred.reject(err);
+            }
+            else {
+                console.log('The solution is: ', res);
+                deferred.resolve(res)
+            }
+        });
+        return deferred.promise;
+    }
+
+    function inviteVolunteers(user) {
+        console.log("In inviteVolunteers model.js");
+
+        var deferred = q.defer();
+        var mysql = require('mysql');
+
+        if (Array.isArray(user)) {
+
+        }
+        else {
+            var query = pool.query('Select * from Person p, Volunteer v where p.id = v.id', function (err, res) {
+
+                if (err != null) {
+                    console.log("error connecting")
+                    console.log(query)
+                    console.log(err)
+                    deferred.reject(err);
+                }
+                else {
+                    console.log('The solution is: ', res);
+                    deferred.resolve(res)
+                }
+            });
+
+
+        }
+
+        return deferred.promise;
+
+    }
+
+
+    function changeRequestStatus(volunteer){
+
+        var deferred = q.defer();
+        var mysql = require('mysql');
+
+
+        //var status = 'approved';
+        //console.log("App req in model",volunteer.id,volunteer.personId,volunteer.projectId,status)
+        var query = pool.query('Update Request SET status = ? WHERE requestedBy = ? and requestTo =  ? and requestedFor = ? ',
+            [volunteer.status,volunteer.personId,volunteer.id,volunteer.projectId],function(err,res){
+                console.log(query)
+                if(err!=null) {
+                    console.log("error connecting")
+                    console.log(query)
+                    console.log(err)
+                    deferred.reject(err);
+                }
+                else {
+                    console.log('The solution is: ', res);
+                    if(volunteer.status=='approved'){
+                        var participation = { participatesIn:volunteer.projectId,
+                            participatedBy:volunteer.personId };
+                        pool.query({
+                            sql:  'INSERT INTO Participation SET ?',
+                            timeout: 4000 ,    //4 secs
+                            values: [participation]
+                        }, function (error, results, fields) {
+                            if(error!=null) {
+                                console.log("error connecting")
+                                console.log(error)
+                                deferred.reject(error);
+                            }
+                            else{
+                                console.log('The solution is: ',results);
+                                console.log("length works",results.length)
+                                deferred.resolve(results);
+                            }
+                        });
+                    }
+                    deferred.resolve(res)
+                }
+            });
+        return deferred.promise;
+    }
+
+    function getVolunteers(user) {
+        var deferred = q.defer();
+        var mysql = require('mysql');
+
+        console.log("in get Volunteers model.js")
+        console.log(user)
+
+        if(Array.isArray(user)){
+            deferred.reject(0);
+        }
+        else{
+            console.log(user)
+            // var status = 'Pending'
+            var query = pool.query('Select r.requestTo as id,p.id as personId,r.status,p.firstName,p.lastName,p.gender,p.email,p.age,p.occupation,v.interests,pr.name,pr.id as projectId'+
+                ' from Request r,Person p ,Volunteer v,Project pr'+
+                ' where r.requestedBy = p.id'+
+                ' and p.id = v.id'+
+                ' and pr.id = r.requestedFor'+
+                ' and r.requestTo=?',[user.id],function(err,res){
+                if(err!=null) {
+                    console.log("error connecting")
+                    console.log(query)
+                    console.log(err)
+                    deferred.reject(err);
+                }
+                else {
+                    console.log('The solution is: ', res);
+                    deferred.resolve(res)
+                }
+            });
+
+
+        }
+        return deferred.promise;
+    }
+
+
+    //---------------------------------
     function deleteVolunteerProjectById(userId,projectId) {
 
         var deferred = q.defer();

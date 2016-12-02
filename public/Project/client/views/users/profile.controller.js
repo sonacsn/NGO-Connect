@@ -28,18 +28,22 @@
             // console.log(newuser.emails)
 
             if(Array.isArray(user)){
+                if(user[1].username !== undefined && user[1].password !== undefined
+                    && user[0].firstName !== undefined && user[0].lastName !== undefined
+                    && user[0].email !== undefined && user[0].gender !== undefined) {
+                    console.log("in profile controller")
+                    console.log($rootScope.user._id)
 
-                console.log("in profile controller")
-                console.log($rootScope.user._id)
-
-                UserService.updateUser(user, user[0].id).then(
-                    function(newuser)
-                    {
-                        console.log(newuser)
-                        $rootScope.user=newuser;
-                        alert("Profile Fields Updated")
-                    })
-
+                    UserService.updateUser(user, user[0].id).then(
+                        function (newuser) {
+                            console.log(newuser)
+                            $rootScope.user = newuser;
+                            alert("Profile Fields Updated")
+                        })
+                }
+                else{
+                    alert("Provide proper credentials")
+                }
 
             }
             else{
@@ -54,6 +58,9 @@
                             $rootScope.user=user;
                             alert("Profile Fields Updated")
                         })
+                }
+                else{
+                    alert("Provide proper Credentials")
                 }
             }
 
