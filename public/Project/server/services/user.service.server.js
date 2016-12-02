@@ -14,6 +14,8 @@ module.exports = function(app, model) {
     app.put('/api/project/NgoProject/:id',     auth ,deleteProjectById)
     app.post("/api/project/NgoProject/",     auth ,createProject)
     app.put("/api/project/NgoProject/",     auth ,updateProject)
+
+    app.put("/api/project/Volunteer/:userId/Project/:projectId", auth ,deleteVolunteerProjectById )
     //-----------------------------  login/register NEW CODE -------------------------
 
     app.post  ('/api/project/login', passport.authenticate('assignment'), login);
@@ -35,6 +37,38 @@ module.exports = function(app, model) {
     app.put   ('/api/assignment/admin/user/:id', auth, updateUserByAdmin);
     app.delete('/api/assignment/admin/user/:id', auth, deleteUserById);*/
 //--------------------------------------------------------
+
+
+
+    function deleteVolunteerProjectById(req, res){
+
+        var userId = req.params.userId;
+        var projectId = req.params.projectId;
+
+
+        var project= req.body;
+        console.log("In createPdeleteVolunteerProjectByIdroject service")
+        console.log(userId,projectId)
+        //res.sendStatus(200);
+
+        user_model.deleteVolunteerProjectById(userId,projectId)
+            .then(function (status) {
+                    console.log("In createProject service result")
+                    console.log(status)
+                    res.sendStatus(200)
+                }, function (error) {
+                    console.log("in createProject reject value")
+                    res.sendStatus(400)
+                }
+            );
+
+
+    }
+
+
+
+
+
 
     function updateuser(req, res) {
 

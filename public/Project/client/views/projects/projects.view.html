@@ -10,6 +10,7 @@
             <li role="presentation" ng-class="{active: $location.path() == '/form/:formId/fields'}">
             <a href="">Fields</a></li>
         </ul>-->
+        <div  ng-show="type=='NGO'">
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
                 <thead>
@@ -46,7 +47,26 @@
                    <td colspan="2">
                       <div>
 
-                          {{project}}
+                          <dl>
+                              <dt> Project Location</dt>
+                              <dd>{{project.location }}</dd>
+                          </dl>
+
+
+                          <dl>
+                              <dt> Project Description </dt>
+                              <dd>{{project.description }}</dd>
+                          </dl>
+
+                          <dl>
+                              <dt> Project Duration (Months) </dt>
+                              <dd>{{project.duration_months }}</dd>
+                          </dl>
+
+                          <dl>
+                              <dt> start Date </dt>
+                              <dd>{{project.startDate }}</dd>
+                          </dl>
 
                       </div>
                    </td>
@@ -59,12 +79,98 @@
                 <span class="glyphicon glyphicon-plus"></span>Add New Projects</button>
 
         </div>
+        </div>
+
+       <!-------------------- VOLUNTEER---------------------------------------------------------->
+        <div  ng-show="type=='Volunteer'">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th><span class="caret"></span> Project Name</th>
+                        <th><span class="caret"></span> NGO Name</th>
+                        <th><span class="caret"></span> Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- <tr>
+                         <td><input type="text" placeholder="Form Name" ng-model="form.title"></td>
+                         <td class="text-nowrap"><a class="btn btn-primary btn-md" ng-click="addForm(form.title)" role="button">
+                             <span class="glyphicon glyphicon-plus"></span></a>
+                             <a class="btn btn-success btn-md" ng-click="updateForm(form)" role="button">
+                                 <span class="glyphicon glyphicon-ok"></span></a>
+                         </td>
+
+                     </tr>-->
+                    <tr ng-repeat-start="project in projects" ng-class="{'selected':$index == selectedRow}">
+                        <td>
+                            {{project.name}}
+                        </td>
+                        <td>
+                            {{project.NGO_name}}
+                        </td>
+                        <td class="text-nowrap">
+                            <a class="btn btn-info btn-sm" ng-click="project.expanded = !project.expanded">
+                                Details</a>
+                        <!--    <a class="btn btn-primary btn-md"  role="button"
+                               data-toggle="modal" data-target="#update2">
+                                <span class="glyphicon glyphicon-plus" ></span>Add Times</a>-->
+                            <a class="btn btn-danger btn-md"ng-click="deleteProject(project)" role="button">
+                                <span class="glyphicon glyphicon-remove"></span></a>
+                        </td>
+                    </tr>
+                    <tr ng-if="project.expanded" ng-repeat-end="">
+                        <td colspan="3">
+                            <div>
+
+
+
+                                <dl>
+                                    <dt> Project Location</dt>
+                                    <dd>{{project.location }}</dd>
+                                </dl>
+
+
+                                <dl>
+                                    <dt> Project Description </dt>
+                                    <dd>{{project.description }}</dd>
+                                </dl>
+
+                                <dl>
+                                    <dt> Project Duration (Months) </dt>
+                                    <dd>{{project.duration_months }}</dd>
+                                </dl>
+
+                                <dl>
+                                    <dt> start Date </dt>
+                                    <dd>{{project.startDate }}</dd>
+                                </dl>
+
+
+                                <dl>
+                                    <dt> NGO Cause Description </dt>
+                                    <dd>{{project.causeDescription}}</dd>
+                                </dl>
+
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+
+
+
     </div>
 </div>
 
 
 
-<!-----------------------------------------------MODAL------------------------------------------>
+<!-----------------------------------------------MODAL 1------------------------------------------>
 <div class="modal fade" id="update" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -101,7 +207,7 @@
                            ng-model="vm.newproject.volunteerCount">
 
                     <label for="DATE">Start Date:</label>
-                    <input id="DATE" class="form-control input-sm"  type="date"
+                    <input id="DATE" class="form-control input-sm"  type="datetime-local"
                            ng-model="vm.newproject.startDate">
 
                 </div>
@@ -123,3 +229,55 @@
         </div>
     </div>
 </div>
+
+
+
+
+<!-----------------------------------------------MODAL 2------------------------------------------>
+
+
+<!--
+
+
+<div class="modal fade" id="update2" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            &lt;!&ndash;HEADER&ndash;&gt;
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h7 class="modal-title" id="myModalLabel">Project</h7>
+            </div>
+            &lt;!&ndash; BODY&ndash;&gt;
+            <div class="modal-body">
+
+
+                <div class="form-group">
+
+
+                    <label for="timing">Start Date:</label>
+                    <input id="timing" class="form-control input-sm"  type="datetime-local"
+                           ng-model="vm.newprojecttime.startTime">
+
+
+                    <label for="Duration">Duration (Minutes):</label>
+                    <input id="Duration" class="form-control input-sm"  type="number"
+                           ng-model="vm.newprojecttime.duration">
+
+
+                </div>
+
+
+
+            </div>
+
+            &lt;!&ndash;FOOTER&ndash;&gt;
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal"
+                        ng-click="addTimings(vm.newprojecttime)">Okay</button>
+
+            </div>
+        </div>
+    </div>
+</div>-->

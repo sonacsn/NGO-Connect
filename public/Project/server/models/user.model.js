@@ -21,6 +21,7 @@ module.exports = function(pool) {
         createProject:createProject,
         updateProject:updateProject,
        Update: Update,
+        deleteVolunteerProjectById:deleteVolunteerProjectById,
         //--------- to be Modified ---------------
        Delete: Delete,
        findUserByUsername: findUserByUsername,
@@ -30,6 +31,42 @@ module.exports = function(pool) {
     };
 
     return api;
+
+    function deleteVolunteerProjectById(userId,projectId) {
+
+        var deferred = q.defer();
+        console.log("userid in deleteVolunteerProjectById model :  ",projectId)
+        var mysql = require('mysql');
+
+        /*var sql = "SELECT * FROM ?? WHERE ?? = ? ";
+         var inserts = [type, 'id', userId];
+         console.log(" searcehd value:", inserts)
+         sql = mysql.format(sql, inserts);*/
+
+        // if(type=="NGO")
+        {
+
+            pool.query({
+                sql: "DELETE FROM Participation WHERE participatesIn = ? AND participatedBy = ?",
+                timeout: 4000 ,    //4 secs
+                values: [projectId,userId]
+            }, function (error, results, fields) {
+                if(error!=null) {
+                    console.log("error connecting")
+                    console.log(error)
+                    deferred.reject(error);
+                }
+                else{
+                    console.log('The solution is: ',results);
+                    console.log("length works",results.length)
+                    deferred.resolve(results);
+                }
+            });
+        }
+
+        return deferred.promise;
+
+    }
 
 
     function Update(user) {
@@ -224,13 +261,33 @@ function findAllProjects(userId,type){
             }
         });
     }
+    else{
+
+        pool.query({
+            sql: "SELECT pr.*,ngo.name as NGO_name,ngo.type,ngo.memberSize,ngo.causeDescription FROM Participation as pa,Project as pr,NGO  " +
+            "WHERE participatedBy = ? AND pa.participatesIn=pr.id AND NGO.id=pr.ngo",
+            timeout: 4000 ,    //4 secs
+            values: [userId]
+        }, function (error, results, fields) {
+            if(error!=null) {
+                console.log("error connecting")
+                console.log(error)
+                 deferred.reject(error);
+            }
+            else{
+                console.log('The ids of projects are: ',results);
+
+                deferred.resolve(results);
+            }
+        });
+
+
+
+    }
 
     return deferred.promise;
 
 }
-
-
-
 
 
     function FindById(userId,type) {

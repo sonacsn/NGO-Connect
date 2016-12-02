@@ -1,8 +1,31 @@
 module.exports = function(app,pool) {
     console.log("In mySQL app.js")
 
+
     var modeluser = require("./models/user.model.js")(pool);
     require("./services/user.service.server.js")(app, modeluser);
+
+
+
+
+    /*pool.query({
+        sql: "SELECT pr.*,ngo.name as NGO_name,ngo.type,ngo.memberSize,ngo.causeDescription FROM Participation as pa,Project as pr,NGO  " +
+        "WHERE participatedBy = ? AND pa.participatesIn=pr.id AND NGO.id=pr.ngo",
+        timeout: 4000 ,    //4 secs
+        values: [1]
+    }, function (error, results, fields) {
+        if(error!=null) {
+            console.log("error connecting")
+            console.log(error)
+           // deferred.reject(error);
+        }
+        else{
+            console.log('The ids of projects are: ',results);
+
+           // deferred.resolve(results);
+        }
+    });*/
+
 
 
 /*

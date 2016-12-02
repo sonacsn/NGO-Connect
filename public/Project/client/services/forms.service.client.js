@@ -65,9 +65,26 @@
             console.log(id)
             var deferred = $q.defer();
 
-            $http.put("/api/project/NgoProject/" +id).success(function(response) {
-                deferred.resolve(response);
-            });
+
+            if($rootScope.type=="NGO")
+            {
+                console.log("deleteProject NGO",id)
+                $http.put("/api/project/NgoProject/" +id).success(function(response) {
+                    deferred.resolve(response);
+                });
+
+            }
+            else{
+                console.log("deleteProject user",id,$rootScope.user[1].id)
+                $http.put("/api/project/Volunteer/"+$rootScope.user[1].id +"/Project/" +id).success(function(response) {
+                    deferred.resolve(response);
+                });
+
+            }
+
+
+
+
             console.log(deferred.promise)
             return deferred.promise;
         }
