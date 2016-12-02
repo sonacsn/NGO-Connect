@@ -49,7 +49,26 @@ module.exports = function(pool) {
         var mysql = require('mysql');
 
         if(Array.isArray(user)){
+         console.log("ZZZZZZZZZZZZZ")
 
+            var q2 = pool.query('Select pr.*,NGO.name as NGO_name,NGO.type,NGO.memberSize,NGO.causeDescription ' +
+                ',req.status ' +
+                'from Request req,Project as pr,NGO '+
+                'where req.requestTo = NGO.id and req.requestedFor = pr.id and req.requestedBy =? '
+                ,[user[1].id],
+                function (err, res) {
+
+                    if (err != null) {
+                        console.log("error connecting")
+                        console.log("ZZZZZZZZZZZZZ")
+                        console.log(err)
+                        deferred.reject(err);
+                    }
+                    else {
+                        console.log('The ZZZZZZZZ solution is: ', res);
+                        deferred.resolve(res)
+                    }
+                });
         }
         else{
             var q2 = pool.query('Select i.status, p.firstName,p.lastName,pr.name,pr.id as projectId,p.id as personId from Invitation i,Person p,Project pr '+

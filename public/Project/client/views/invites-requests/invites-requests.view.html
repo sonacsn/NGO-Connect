@@ -125,7 +125,7 @@
                     <table class="table table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th><span class="caret"></span> Volunteer Name</th>
+                            <th><span class="caret"></span> NGO Name</th>
                             <th><span class="caret"></span> Project Name</th>
                             <th><span class="caret"></span> Status </th>
                         </tr>
@@ -137,7 +137,7 @@
                         danger: invitation.status == 'declined',
                         warning: invitation.status == 'pending'}">
                             <td >
-                                {{invitation.firstName}} {{invitations.lastName}}
+                                {{invitation.NGO_name}}
                             </td>
                             <td >
                                 {{invitation.name}}
