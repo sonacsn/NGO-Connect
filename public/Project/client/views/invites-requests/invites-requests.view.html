@@ -5,6 +5,9 @@
     <h2 ng-hide="user">Please <a href="#/login">Login</a>/<a href="#/register">Register</a> to view Forms</h2>-->
     <div ng-show="user">
         <br>
+
+        <!--------------- NGO---------------------------------------->
+        <div ng-show="type=='NGO'">
         <ul class="nav nav-tabs">
             <li role="presentation"  ng-class="{active: selected == 1 }" ng-click="selected=1">
                 <a href="">Pending Requests</a></li>
@@ -23,15 +26,7 @@
                 </tr>
                 </thead>
                 <tbody>
-               <!-- <tr>
-                    <td><input type="text" placeholder="Form Name" ng-model="form.title"></td>
-                    <td class="text-nowrap"><a class="btn btn-primary btn-md" ng-click="addForm(form.title)" role="button">
-                        <span class="glyphicon glyphicon-plus"></span></a>
-                        <a class="btn btn-success btn-md" ng-click="updateForm(form)" role="button">
-                            <span class="glyphicon glyphicon-ok"></span></a>
-                    </td>
 
-                </tr>-->
                 <tr ng-if="volunteer.status=='pending'" ng-repeat-start="volunteer in volunteers" ng-class="{'selected':$index == selectedRow}">
                     <td ng-click="volunteer.expanded = !volunteer.expanded">
                        {{volunteer.firstName}} {{volunteer.lastName}}
@@ -55,11 +50,6 @@
                </tr>
                 </tbody>
             </table>
-
-        <!--    <button type="button" class="btn btn-primary btn-lg" ng-click="editProject(null,'add')"
-                    data-toggle="modal" data-target="#update">
-                <span class="glyphicon glyphicon-plus"></span>Add New Projects</button>-->
-
         </div>
     </div>
 
@@ -75,15 +65,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!-- <tr>
-                         <td><input type="text" placeholder="Form Name" ng-model="form.title"></td>
-                         <td class="text-nowrap"><a class="btn btn-primary btn-md" ng-click="addForm(form.title)" role="button">
-                             <span class="glyphicon glyphicon-plus"></span></a>
-                             <a class="btn btn-success btn-md" ng-click="updateForm(form)" role="button">
-                                 <span class="glyphicon glyphicon-ok"></span></a>
-                         </td>
-
-                     </tr>-->
                     <tr ng-repeat-start="vol in allVolunteers" ng-class="{'selected':$index == selectedRow}">
                         <td ng-click="project.expanded = !project.expanded">
                             {{vol.firstName}} {{vol.lastName}}
@@ -92,27 +73,23 @@
                             <a class="btn btn-primary btn-sm" ng-click="project.expanded = !project.expanded">
                                 Details</a>
                             <a class="btn btn-info btn-md"  role="button"
-                               data-toggle="modal" data-target="#update" ng-click="vm.getProbProjects(vol)">
+                               data-toggle="modal" data-target="#invite" ng-click="vm.getProbProjects(vol)">
                                 Invite</a>
                         </td>
                     </tr>
                     <tr ng-if="project.expanded" ng-repeat-end="">
                         <td colspan="2">
                             <div>
-
                                 {{vol}}
-
                             </div>
                         </td>
                     </tr>
                     </tbody>
                 </table>
-
-
             </div>
         </div>
 
-
+<!--------------------------------------SECTION 3------------------------------------>
         <div ng-show="selected == 3">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
@@ -124,15 +101,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!-- <tr>
-                         <td><input type="text" placeholder="Form Name" ng-model="form.title"></td>
-                         <td class="text-nowrap"><a class="btn btn-primary btn-md" ng-click="addForm(form.title)" role="button">
-                             <span class="glyphicon glyphicon-plus"></span></a>
-                             <a class="btn btn-success btn-md" ng-click="updateForm(form)" role="button">
-                                 <span class="glyphicon glyphicon-ok"></span></a>
-                         </td>
-
-                     </tr>-->
                     <tr ng-repeat="invitation in vm.invitations"
                         ng-class="{'selected':$index == selectedRow,
                         success: invitation.status == 'approved',
@@ -148,31 +116,19 @@
                             {{invitation.status}}
                         </td>
                     </tr>
-                   <!-- <tr ng-if="volunteer.expanded" ng-repeat-end="">
-                        <td colspan="2">
-                            <div>
-                                {{volunteer}}
-                            </div>
-                        </td>
-                    </tr>-->
                     </tbody>
                 </table>
-
-                <!--    <button type="button" class="btn btn-primary btn-lg" ng-click="editProject(null,'add')"
-                            data-toggle="modal" data-target="#update">
-                        <span class="glyphicon glyphicon-plus"></span>Add New Projects</button>-->
-
             </div>
         </div>
 
 
 </div>
-
+    </div>
 </div>
 
 
-<!-----------------------------------------------MODAL------------------------------------------>
-<div class="modal fade" id="update" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+<!-----------------------------------------------MODAL invite------------------------------------------>
+<div class="modal fade" id="invite" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <!--HEADER-->
@@ -191,25 +147,15 @@
                                 ng-options="item.name for item in vm.userProjects">
                         </select>
                     </form>
-                   <!-- <select class="form-control"  id="OPTIONS">
-                        <option ng-repeat="option in vm.userProjects" value="{{option.name}}" label="{{option.name}}"
-                        ng-click="vm.sendProject=option">
-                        </option>
-                    </select>-->
                 </div>
-
-
-
                 </div>
-
             <!--FOOTER-->
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-success" data-dismiss="modal"
                        ng-click="vm.sendInvite(vm.option)">SEND</button>
-
             </div>
         </div>
     </div>
 </div>
+<!-------------------------------------------------MODAL END--------------------------------------------------------->
