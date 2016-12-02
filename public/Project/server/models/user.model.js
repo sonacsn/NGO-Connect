@@ -98,20 +98,45 @@ module.exports = function(pool) {
         var deferred = q.defer();
         var mysql = require('mysql');
         var status = 'pending';
-        console.log(vol.ngoId,vol.id,vol.projectId,status)
-        var q2 = pool.query('INSERT INTO Invitation VALUES (?,?,?,?)',[vol.ngoId,vol.id,vol.projectId,status],
-            function (err, res) {
+        console.log(vol.ngoId,vol.id,vol.projectId,status,vol.type)
 
-                if (err != null) {
-                    console.log("error connecting")
-                    console.log(err)
-                    deferred.reject(err);
-                }
-                else {
-                    console.log('The solution is: ', res);
-                    deferred.resolve(res)
-                }
-            });
+        if(vol.type=="NGO"){
+
+            console.log("SEND INVITE NGO")
+            var q2 = pool.query('INSERT INTO Invitation VALUES (?,?,?,?)',[vol.ngoId,vol.id,vol.projectId,status],
+                function (err, res) {
+
+                    if (err != null) {
+                        console.log("error connecting SEND INVITE NGO")
+                        console.log(err)
+                        deferred.reject(err);
+                    }
+                    else {
+                        console.log('The solution SEND INVITE NGO: ', res);
+                        deferred.resolve(res)
+                    }
+                });
+        }
+        else
+        {
+
+            console.log("SEND INVITE VOLUNTEER")
+            var q2 = pool.query('INSERT INTO Request VALUES (?,?,?,?)',[vol.id,vol.ngoId,vol.projectId,status],
+                function (err, res) {
+
+                    if (err != null) {
+                        console.log("error connecting SEND INVITE VOLUNTEER")
+                        console.log(err)
+                        deferred.reject(err);
+                    }
+                    else {
+                        console.log('The solution SEND INVITE VOLUNTEER: ', res);
+                        deferred.resolve(res)
+                    }
+                });
+        }
+
+
         return deferred.promise;
     }
 
@@ -152,6 +177,30 @@ module.exports = function(pool) {
         var mysql = require('mysql');
 
         if (Array.isArray(user)) {
+
+            var query = pool.query("select p.*,NGO.name as NGO_name,NGO.type,NGO.memberSize,NGO.causeDescription " +
+                "from Project p, Ngo " +
+                "where p.ngo = Ngo.id " +
+                "and not exists " +
+                "(select * from Invitation where invitedFor = p.id " +
+                "and invitedTo= ? and status in ('pending','approved')) " +
+                "and not exists " +
+                "(select * from Request  where requestedFor = p.id " +
+                "and requestedBy = ? and status in ('pending','approved')) ",[user[1].id, user[1].id],
+                function (err, res) {
+
+                console.log("inviteVolunteers Volunteer",query)
+                if (err != null) {
+                    console.log("error connecting inviteVolunteers Volunteer")
+                    console.log(err)
+                    deferred.reject(err);
+                }
+                else {
+                    console.log('The solution inviteVolunteers Volunteer: ', res);
+                    deferred.resolve(res)
+                }
+            });
+
 
         }
         else {

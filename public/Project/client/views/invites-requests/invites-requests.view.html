@@ -90,25 +90,30 @@
                     <table class="table table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th><span class="caret"></span> Volunteer Name</th>
+                            <th><span class="caret"></span>Project Name</th>
+                            <th><span class="caret"></span>NGO Name</th>
                             <th><span class="caret"></span> Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr ng-repeat-start="vol in allVolunteers" ng-class="{'selected':$index == selectedRow}">
-                            <td ng-click="project.expanded = !project.expanded">
-                                {{vol.firstName}} {{vol.lastName}}
+                            <td>
+                                {{vol.name}}
                             </td>
+                            <td>
+                                {{vol. NGO_name}}
+                            </td>
+
                             <td class="text-nowrap">
                                 <a class="btn btn-primary btn-sm" ng-click="project.expanded = !project.expanded">
                                     Details</a>
                                 <a class="btn btn-info btn-md"  role="button"
-                                   data-toggle="modal" data-target="#invite" ng-click="vm.getProbProjects(vol)">
-                                    Invite</a>
+                                   ng-click="vm.sendRequest(vol)">
+                                    Request</a>
                             </td>
                         </tr>
                         <tr ng-if="project.expanded" ng-repeat-end="">
-                            <td colspan="2">
+                            <td colspan="3">
                                 <div>
                                     {{vol}}
                                 </div>

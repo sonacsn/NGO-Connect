@@ -4,7 +4,7 @@
         .module("FormBuilderApp")
         .factory("UserService", userService);
 
-    function userService($q,$http)
+    function userService($q,$http,$rootScope)
     {
         var service = {
 
@@ -43,7 +43,10 @@
             console.log("sendInvite Client server",project,volId,ngoId)
             var deferred = $q.defer();
 
-            var invitation = {projectId:project.id,id:volId,ngoId:ngoId}
+            var invitation = {projectId:project.id,id:volId,ngoId:ngoId,type:$rootScope.type}
+
+            console.log("VERMA CHECK")
+            console.log(invitation)
             $http.put("/api/project/NGO/sendInvite",invitation).success(function (response) {
                 deferred.resolve(response);
 

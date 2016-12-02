@@ -10,6 +10,28 @@
         vm.sendInvite=sendInvite;
         vm.getProbProjects=getProbProjects;
         vm.getAllInvitations = getAllInvitations;
+        vm.sendRequest=sendRequest
+
+
+        function sendRequest(vol) {
+
+            console.log("send Request controller.js")
+            console.log(vol,vol.ngo,$rootScope.user[1].id)
+
+            UserService.sendInvite(vol,vol.ngo,$rootScope.user[1].id)
+                .then(function(status)
+                {
+                    console.log(status)
+
+                    if(status=="OK") {
+                        alert("The Volunteer has been invited")
+                        inviteVolunteers($rootScope.user);
+                    }
+                    else
+                        alert("Problem with inviting")
+                });
+        }
+
 
         function getAllInvitations(user) {
             console.log(user);
