@@ -1,12 +1,11 @@
-# DBMS
-### Project Made On AngularJS in frontend
-### NodeJS in the backend
-### MYSQL as the Database
+# NGO Connect
+
+#### Provides a platform for NGOs to connect with people who believe in the same values as them.
 
 ## Overview :
- - Website has two user NGO and User
- - NGO's can post about the current positions for volunteer work
- - User can post their availibility 
- - Both User and NGO can send requests to each other
- - Both User and NGO can accept/decline a request 
+ * The application has two users NGO and User
+ * NGOs can post about the current positions for volunteer work
+ * Users can post their availibility 
+ * Both User and NGO can send requests to each other for the volunteer work
+ * Both User and NGO can accept/decline a request
  
